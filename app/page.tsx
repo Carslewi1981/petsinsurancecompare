@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import StatBar from "@/components/StatBar";
+import VetCostSection from "@/components/VetCostSection";
 import HowItWorks from "@/components/HowItWorks";
 import PlanCard from "@/components/PlanCard";
 import { insurers } from "@/lib/insurers";
@@ -108,6 +109,9 @@ export default function HomePage() {
 
       {/* Stat marquee */}
       <StatBar />
+
+      {/* Vet Cost Reality Check */}
+      <VetCostSection />
 
       {/* How it works — parchment tile */}
       <HowItWorks />
