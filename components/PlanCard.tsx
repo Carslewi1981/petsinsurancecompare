@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Check, X, ChevronDown, ChevronUp, Phone, Globe } from "lucide-react";
 import { Insurer, ANIMAL_TYPES } from "@/lib/insurers";
 import { useStore } from "@/lib/store";
+import { getPriceMultiplier } from "@/lib/priceMultiplier";
 import StarRating from "./StarRating";
 
 interface PlanCardProps {
@@ -15,13 +16,17 @@ interface PlanCardProps {
 
 export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const { comparedIds, toggleCompare, setActiveModal, setContactInsurer, t } = useStore();
+  const { comparedIds, toggleCompare, setActiveModal, setContactInsurer, t, petProfile } = useStore();
   const isSelected = comparedIds.includes(insurer.id);
 
-  const price =
+  const basePrice =
     animal === "all"
       ? Math.min(...Object.values(insurer.monthlyPrice).filter((p) => p > 0))
       : insurer.monthlyPrice[animal] || 0;
+
+  const multiplier = getPriceMultiplier(petProfile, animal);
+  const price = Math.round(basePrice * multiplier);
+  const priceAdjusted = multiplier !== 1.0;
 
   const animalLabel =
     animal === "all" ? t.card_from : ANIMAL_TYPES.find((a) => a.id === animal)?.label || "";
@@ -82,6 +87,14 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
               ${price}
             </span>
             <span className="text-[#7a7a7a] text-[17px]">/mo</span>
+            {priceAdjusted && (
+              <span
+                className="text-[#0066cc] font-semibold"
+                style={{ fontSize: 11, letterSpacing: "-0.12px", marginLeft: 4 }}
+              >
+                est.
+              </span>
+            )}
           </div>
           <div className="text-[#7a7a7a] text-[14px]" style={{ letterSpacing: "-0.224px" }}>
             {animal === "all" ? t.card_startingFrom : t.card_forAnimal.replace("{animal}", animalLabel)}

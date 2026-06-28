@@ -14,10 +14,19 @@ export interface Filters {
   sortBy: string;
 }
 
+export interface PetProfile {
+  age: string;   // "puppy" | "young" | "adult" | "senior" | "senior+"
+  breed: string; // size category key
+  location: string; // US state abbreviation
+}
+
 interface StoreState {
   lang: LangCode;
   setLang: (l: LangCode) => void;
   t: T;
+  petProfile: PetProfile;
+  setPetProfile: (p: PetProfile) => void;
+  updatePetProfile: <K extends keyof PetProfile>(key: K, value: PetProfile[K]) => void;
   selectedAnimal: string;
   setSelectedAnimal: (a: string) => void;
   filters: Filters;
@@ -48,6 +57,9 @@ const StoreContext = createContext<StoreState | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<LangCode>("en");
   const t = translations[lang];
+  const [petProfile, setPetProfile] = useState<PetProfile>({ age: "adult", breed: "any", location: "" });
+  const updatePetProfile = <K extends keyof PetProfile>(key: K, value: PetProfile[K]) =>
+    setPetProfile((prev) => ({ ...prev, [key]: value }));
   const [selectedAnimal, setSelectedAnimal] = useState("all");
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [comparedIds, setComparedIds] = useState<string[]>([]);
@@ -74,6 +86,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     <StoreContext.Provider
       value={{
         lang, setLang, t,
+        petProfile, setPetProfile, updatePetProfile,
         selectedAnimal,
         setSelectedAnimal,
         filters,

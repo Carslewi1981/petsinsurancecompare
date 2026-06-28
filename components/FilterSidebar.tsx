@@ -3,6 +3,7 @@
 import { useStore } from "@/lib/store";
 import AnimalSelector from "./AnimalSelector";
 import { Search, RotateCcw } from "lucide-react";
+import { US_STATES, STATE_NAMES } from "@/lib/priceMultiplier";
 
 const reimbursementOptions = [
   { value: "any", label: "Any" },
@@ -40,6 +41,28 @@ const sortOptions = [
   { value: "claims", label: "Fastest Claims" },
 ];
 
+const ageOptions = [
+  { value: "puppy",    label: "Puppy / Kitten (0–1 yr)" },
+  { value: "young",   label: "Young (1–3 yrs)" },
+  { value: "adult",   label: "Adult (3–7 yrs)" },
+  { value: "senior",  label: "Senior (7–10 yrs)" },
+  { value: "senior+", label: "Senior+ (10+ yrs)" },
+];
+
+const dogBreedOptions = [
+  { value: "any",    label: "Any / Unknown" },
+  { value: "small",  label: "Small (under 20 lbs)" },
+  { value: "medium", label: "Medium (20–50 lbs)" },
+  { value: "large",  label: "Large (50–90 lbs)" },
+  { value: "giant",  label: "Giant (90+ lbs)" },
+];
+
+const catBreedOptions = [
+  { value: "any",       label: "Any / Unknown" },
+  { value: "domestic",  label: "Domestic (mixed)" },
+  { value: "purebred",  label: "Purebred" },
+];
+
 function Select({
   value,
   onChange,
@@ -66,11 +89,76 @@ function Select({
 }
 
 export default function FilterSidebar() {
-  const { filters, updateFilter, resetFilters, comparedIds, setActiveModal } = useStore();
+  const {
+    filters, updateFilter, resetFilters,
+    comparedIds, setActiveModal,
+    petProfile, updatePetProfile,
+    selectedAnimal,
+  } = useStore();
+
+  const breedOptions =
+    selectedAnimal === "dog" ? dogBreedOptions :
+    selectedAnimal === "cat" ? catBreedOptions : null;
 
   return (
     <div className="flex flex-col gap-5">
       <AnimalSelector />
+
+      <div className="w-full h-px bg-[#e0e0e0]" />
+
+      {/* Pet Profile */}
+      <div className="space-y-3">
+        <h3 className="font-semibold text-[#1d1d1f]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
+          Your Pet
+        </h3>
+
+        {/* Age */}
+        <div className="space-y-1">
+          <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>Age</label>
+          <Select
+            value={petProfile.age}
+            onChange={(v) => updatePetProfile("age", v)}
+            options={ageOptions}
+          />
+        </div>
+
+        {/* Breed — only for dog/cat */}
+        {breedOptions && (
+          <div className="space-y-1">
+            <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
+              {selectedAnimal === "dog" ? "Size / Breed" : "Breed Type"}
+            </label>
+            <Select
+              value={petProfile.breed}
+              onChange={(v) => updatePetProfile("breed", v)}
+              options={breedOptions}
+            />
+          </div>
+        )}
+
+        {/* Location */}
+        <div className="space-y-1">
+          <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>State / Location</label>
+          <select
+            value={petProfile.location}
+            onChange={(e) => updatePetProfile("location", e.target.value)}
+            className="w-full bg-white border border-[#e0e0e0] text-[#1d1d1f] px-3 py-2 focus:outline-none focus:border-[#0066cc] appearance-none cursor-pointer"
+            style={{ fontSize: 14, letterSpacing: "-0.224px", borderRadius: 8 }}
+          >
+            <option value="">Any / Not sure</option>
+            {US_STATES.map((s) => (
+              <option key={s} value={s}>{STATE_NAMES[s]} ({s})</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Price impact note */}
+        {(petProfile.age !== "adult" || petProfile.breed !== "any" || petProfile.location) && (
+          <p className="text-[#0066cc]" style={{ fontSize: 11, letterSpacing: "-0.12px" }}>
+            ✦ Prices adjusted for your pet profile
+          </p>
+        )}
+      </div>
 
       <div className="w-full h-px bg-[#e0e0e0]" />
 
