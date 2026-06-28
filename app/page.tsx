@@ -4,8 +4,10 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import StatBar from "@/components/StatBar";
+import TrustBar from "@/components/TrustBar";
 import VetCostSection from "@/components/VetCostSection";
 import HowItWorks from "@/components/HowItWorks";
+import ReviewsSection from "@/components/ReviewsSection";
 import PlanCard from "@/components/PlanCard";
 import { insurers } from "@/lib/insurers";
 import { useStore } from "@/lib/store";
@@ -107,6 +109,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Trust signals */}
+      <TrustBar />
+
       {/* Stat marquee */}
       <StatBar />
 
@@ -173,6 +178,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Community reviews */}
+      <ReviewsSection />
 
       {/* CTA — dark tile */}
       <section className="bg-[#272729]" style={{ padding: "80px 0" }}>
