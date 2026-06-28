@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Insurer } from "./insurers";
+import { LangCode, T, translations } from "./translations";
 
 export interface Filters {
   maxPrice: number;
@@ -14,6 +15,9 @@ export interface Filters {
 }
 
 interface StoreState {
+  lang: LangCode;
+  setLang: (l: LangCode) => void;
+  t: T;
   selectedAnimal: string;
   setSelectedAnimal: (a: string) => void;
   filters: Filters;
@@ -42,6 +46,8 @@ const defaultFilters: Filters = {
 const StoreContext = createContext<StoreState | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
+  const [lang, setLang] = useState<LangCode>("en");
+  const t = translations[lang];
   const [selectedAnimal, setSelectedAnimal] = useState("all");
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [comparedIds, setComparedIds] = useState<string[]>([]);
@@ -67,6 +73,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   return (
     <StoreContext.Provider
       value={{
+        lang, setLang, t,
         selectedAnimal,
         setSelectedAnimal,
         filters,

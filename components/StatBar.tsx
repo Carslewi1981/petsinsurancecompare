@@ -1,18 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const stats = [
-  "8+ Providers",
-  "7 Animal Types",
-  "Side-by-Side Comparison",
-  "Free to Use",
-  "No Hidden Fees",
-  "Updated Daily",
-  "Trusted by 50K+ Pet Owners",
-];
+import { useStore } from "@/lib/store";
 
 export default function StatBar() {
+  const { t } = useStore();
+
+  const stats = [
+    t.bar_providers,
+    t.bar_types,
+    t.bar_sideBySide,
+    t.bar_freeToUse,
+    t.bar_noFees,
+    t.bar_updated,
+    t.bar_trusted,
+  ];
+
   const doubled = [...stats, ...stats];
 
   return (

@@ -5,15 +5,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X, Globe } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useStore } from "@/lib/store";
+import { LangCode } from "@/lib/translations";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/compare", label: "Compare" },
-  { href: "/resources", label: "Resources" },
-  { href: "/about", label: "About" },
-];
-
-const languages = [
+const languages: { code: LangCode; label: string; flag: string }[] = [
   { code: "en", label: "English", flag: "🇺🇸" },
   { code: "es", label: "Español", flag: "🇪🇸" },
   { code: "fr", label: "Français", flag: "🇫🇷" },
@@ -49,9 +44,18 @@ const languages = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState(languages[0]);
   const pathname = usePathname();
   const langRef = useRef<HTMLDivElement>(null);
+  const { lang, setLang, t } = useStore();
+
+  const selectedLang = languages.find((l) => l.code === lang) ?? languages[0];
+
+  const links = [
+    { href: "/", label: t.nav_home },
+    { href: "/compare", label: t.nav_compare },
+    { href: "/resources", label: t.nav_resources },
+    { href: "/about", label: t.nav_about },
+  ];
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -118,24 +122,24 @@ export default function Navbar() {
                     boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
                   }}
                 >
-                  {languages.map((lang) => (
+                  {languages.map((l) => (
                     <button
-                      key={lang.code}
+                      key={l.code}
                       onClick={() => {
-                        setSelectedLang(lang);
+                        setLang(l.code);
                         setLangOpen(false);
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-white/10"
                       style={{
                         fontSize: 13,
                         letterSpacing: "-0.12px",
-                        color: selectedLang.code === lang.code ? "#ffffff" : "#a1a1a6",
-                        background: selectedLang.code === lang.code ? "rgba(255,255,255,0.08)" : "transparent",
+                        color: lang === l.code ? "#ffffff" : "#a1a1a6",
+                        background: lang === l.code ? "rgba(255,255,255,0.08)" : "transparent",
                       }}
                     >
-                      <span>{lang.flag}</span>
-                      <span>{lang.label}</span>
-                      {selectedLang.code === lang.code && (
+                      <span>{l.flag}</span>
+                      <span>{l.label}</span>
+                      {lang === l.code && (
                         <span className="ml-auto text-[#0066cc]">✓</span>
                       )}
                     </button>
@@ -149,14 +153,13 @@ export default function Navbar() {
             href="/compare"
             className="text-[12px] bg-[#0066cc] text-white px-4 py-1.5 rounded-full tracking-[-0.12px] hover:bg-[#0071e3] transition-colors active:scale-95"
           >
-            Compare Now
+            {t.nav_compareNow}
           </Link>
         </div>
 
         {/* Mobile: language + hamburger */}
         <div className="md:hidden flex items-center gap-3">
-          {/* Mobile language picker */}
-          <div className="relative" ref={undefined}>
+          <div className="relative">
             <button
               onClick={() => setLangOpen(!langOpen)}
               className="flex items-center gap-1 text-[#a1a1a6]"
@@ -182,23 +185,23 @@ export default function Navbar() {
                     zIndex: 100,
                   }}
                 >
-                  {languages.map((lang) => (
+                  {languages.map((l) => (
                     <button
-                      key={lang.code}
+                      key={l.code}
                       onClick={() => {
-                        setSelectedLang(lang);
+                        setLang(l.code);
                         setLangOpen(false);
                       }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-white/10"
                       style={{
                         fontSize: 13,
-                        color: selectedLang.code === lang.code ? "#ffffff" : "#a1a1a6",
-                        background: selectedLang.code === lang.code ? "rgba(255,255,255,0.08)" : "transparent",
+                        color: lang === l.code ? "#ffffff" : "#a1a1a6",
+                        background: lang === l.code ? "rgba(255,255,255,0.08)" : "transparent",
                       }}
                     >
-                      <span>{lang.flag}</span>
-                      <span>{lang.label}</span>
-                      {selectedLang.code === lang.code && (
+                      <span>{l.flag}</span>
+                      <span>{l.label}</span>
+                      {lang === l.code && (
                         <span className="ml-auto text-[#0066cc]">✓</span>
                       )}
                     </button>
@@ -244,7 +247,7 @@ export default function Navbar() {
                 onClick={() => setMenuOpen(false)}
                 className="text-[14px] bg-[#0066cc] text-white px-5 py-2 rounded-full text-center hover:bg-[#0071e3] transition-colors"
               >
-                Compare Now
+                {t.nav_compareNow}
               </Link>
             </div>
           </motion.div>

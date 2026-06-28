@@ -1,6 +1,33 @@
+"use client";
+
 import Link from "next/link";
+import { useStore } from "@/lib/store";
 
 export default function Footer() {
+  const { t } = useStore();
+
+  const compareLinks = [
+    { label: t.footer_dogs, animal: "dogs" },
+    { label: t.footer_cats, animal: "cats" },
+    { label: t.footer_birds, animal: "birds" },
+    { label: t.footer_rabbits, animal: "rabbits" },
+    { label: t.footer_reptiles, animal: "reptiles" },
+    { label: t.footer_exotic, animal: "exotic" },
+  ];
+
+  const resourceLinks = [
+    { label: t.footer_deductibles, slug: "how-deductibles-work" },
+    { label: t.footer_preExisting, slug: "pre-existing-conditions" },
+    { label: t.footer_exoticGuide, slug: "exotic-pet-coverage-guide" },
+    { label: t.footer_whenToBuy, slug: "when-to-buy-pet-insurance" },
+  ];
+
+  const companyLinks = [
+    { label: t.footer_about, href: "/about" },
+    { label: t.footer_howItWorks, href: "/#how-it-works" },
+    { label: t.footer_resources, href: "/resources" },
+  ];
+
   return (
     <footer className="bg-[#f5f5f7]" style={{ padding: "64px 0 0" }}>
       <div className="max-w-[980px] mx-auto px-4 sm:px-6">
@@ -11,21 +38,21 @@ export default function Footer() {
               Petz Insurance<span className="text-[#0066cc]"> Compare</span>
             </div>
             <p className="text-[#7a7a7a] text-[12px] leading-relaxed">
-              The independent pet insurance comparison platform. Compare top providers for every animal type.
+              {t.footer_desc}
             </p>
           </div>
 
           {/* Compare */}
           <div>
-            <h4 className="text-[12px] font-semibold text-[#1d1d1f] tracking-[-0.12px] mb-3">Compare</h4>
+            <h4 className="text-[12px] font-semibold text-[#1d1d1f] tracking-[-0.12px] mb-3">{t.footer_compare}</h4>
             <ul>
-              {["Dogs", "Cats", "Birds", "Rabbits", "Reptiles", "Exotic Pets"].map((a) => (
-                <li key={a}>
+              {compareLinks.map((a) => (
+                <li key={a.animal}>
                   <Link
-                    href={`/compare?animal=${a.toLowerCase()}`}
+                    href={`/compare?animal=${a.animal}`}
                     className="text-[17px] text-[#0066cc] leading-[2.41] tracking-[0] hover:underline block"
                   >
-                    {a} Insurance
+                    {a.label}
                   </Link>
                 </li>
               ))}
@@ -34,14 +61,9 @@ export default function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-[12px] font-semibold text-[#1d1d1f] tracking-[-0.12px] mb-3">Resources</h4>
+            <h4 className="text-[12px] font-semibold text-[#1d1d1f] tracking-[-0.12px] mb-3">{t.footer_resources}</h4>
             <ul>
-              {[
-                { label: "How Deductibles Work", slug: "how-deductibles-work" },
-                { label: "Pre-existing Conditions", slug: "pre-existing-conditions" },
-                { label: "Exotic Pet Coverage", slug: "exotic-pet-coverage-guide" },
-                { label: "When to Buy Insurance", slug: "when-to-buy-pet-insurance" },
-              ].map((r) => (
+              {resourceLinks.map((r) => (
                 <li key={r.slug}>
                   <Link
                     href={`/resources/${r.slug}`}
@@ -56,13 +78,9 @@ export default function Footer() {
 
           {/* Company */}
           <div>
-            <h4 className="text-[12px] font-semibold text-[#1d1d1f] tracking-[-0.12px] mb-3">Company</h4>
+            <h4 className="text-[12px] font-semibold text-[#1d1d1f] tracking-[-0.12px] mb-3">{t.footer_company}</h4>
             <ul>
-              {[
-                { label: "About Us", href: "/about" },
-                { label: "How It Works", href: "/#how-it-works" },
-                { label: "Resources", href: "/resources" },
-              ].map((item) => (
+              {companyLinks.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
@@ -78,10 +96,10 @@ export default function Footer() {
 
         <div className="py-6">
           <p className="text-[12px] text-[#7a7a7a] leading-relaxed max-w-4xl mb-3">
-            <strong className="text-[#333333]">Disclaimer:</strong> Petz Insurance Compare is an independent comparison platform and is not affiliated with any insurance provider listed. Plan details, pricing, and availability are subject to change. Always verify coverage details directly with the provider before purchasing. Petz Insurance Compare does not sell insurance and is not a licensed insurance agent.
+            <strong className="text-[#333333]">Disclaimer:</strong> {t.footer_disclaimer}
           </p>
           <p className="text-[12px] text-[#7a7a7a]">
-            © {new Date().getFullYear()} Petz Insurance Compare. All rights reserved.
+            © {new Date().getFullYear()} Petz Insurance Compare. {t.footer_rights}
           </p>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { X, Phone, Globe, Mail, Copy, Check, ExternalLink } from "lucide-react";
 import { useStore } from "@/lib/store";
 
 export default function ContactModal() {
-  const { activeModal, setActiveModal, contactInsurer } = useStore();
+  const { activeModal, setActiveModal, contactInsurer, t } = useStore();
   const [copied, setCopied] = useState<string | null>(null);
   const isOpen = activeModal === "contact" && contactInsurer !== null;
 
@@ -19,9 +19,9 @@ export default function ContactModal() {
   if (!contactInsurer) return null;
 
   const contacts = [
-    { key: "phone", icon: Phone, label: "Phone", value: contactInsurer.contact.phone },
-    { key: "website", icon: Globe, label: "Website", value: contactInsurer.contact.website },
-    { key: "email", icon: Mail, label: "Email", value: contactInsurer.contact.email },
+    { key: "phone", icon: Phone, label: t.modal_phone, value: contactInsurer.contact.phone },
+    { key: "website", icon: Globe, label: t.modal_website, value: contactInsurer.contact.website },
+    { key: "email", icon: Mail, label: t.modal_email, value: contactInsurer.contact.email },
   ];
 
   return (
@@ -41,10 +41,8 @@ export default function ContactModal() {
             className="bg-white w-full max-w-md overflow-hidden"
             style={{ borderRadius: 18, border: "1px solid #e0e0e0" }}
           >
-            {/* Accent top */}
             <div className="h-1 w-full" style={{ backgroundColor: contactInsurer.color }} />
 
-            {/* Header */}
             <div className="flex items-center justify-between p-6" style={{ borderBottom: "1px solid #f0f0f0" }}>
               <div className="flex items-center gap-3">
                 <div
@@ -65,7 +63,6 @@ export default function ContactModal() {
               </button>
             </div>
 
-            {/* Contact rows */}
             <div className="p-6 space-y-3">
               {contacts.map(({ key, icon: Icon, label, value }) => (
                 <div
@@ -91,19 +88,18 @@ export default function ContactModal() {
                     {copied === key ? (
                       <>
                         <Check className="w-3 h-3 text-green-600" />
-                        <span className="text-green-600">Copied!</span>
+                        <span className="text-green-600">{t.modal_copied}</span>
                       </>
                     ) : (
                       <>
                         <Copy className="w-3 h-3" />
-                        Copy
+                        {t.modal_copy}
                       </>
                     )}
                   </button>
                 </div>
               ))}
 
-              {/* Action buttons */}
               <div className="flex flex-col gap-2 pt-2">
                 <a
                   href={contactInsurer.contact.website}
@@ -113,13 +109,13 @@ export default function ContactModal() {
                   style={{ backgroundColor: "#0066cc", borderRadius: 9999, fontSize: 17, letterSpacing: "-0.374px" }}
                 >
                   <ExternalLink className="w-4 h-4" />
-                  Visit Website
+                  {t.modal_visit}
                 </a>
                 <button
                   className="flex items-center justify-center gap-2 py-3 text-[#0066cc] hover:text-[#0071e3] transition-colors active:scale-95"
                   style={{ border: "1px solid #0066cc", borderRadius: 9999, fontSize: 17, letterSpacing: "-0.374px" }}
                 >
-                  Request a Callback
+                  {t.modal_callback}
                 </button>
               </div>
             </div>

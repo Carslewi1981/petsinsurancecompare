@@ -1,25 +1,16 @@
-const steps = [
-  {
-    number: "01",
-    title: "Choose Your Animal",
-    description:
-      "Select your pet type from our full range: dogs, cats, birds, rabbits, reptiles, and exotic animals.",
-  },
-  {
-    number: "02",
-    title: "Filter by Price & Coverage",
-    description:
-      "Set your budget, desired reimbursement rate, annual maximum, and other key preferences.",
-  },
-  {
-    number: "03",
-    title: "Compare & Contact",
-    description:
-      "View plans side-by-side, compare features and exclusions, then contact providers directly.",
-  },
-];
+"use client";
+
+import { useStore } from "@/lib/store";
 
 export default function HowItWorks() {
+  const { t } = useStore();
+
+  const steps = [
+    { number: "01", title: t.how_s1_title, description: t.how_s1_desc },
+    { number: "02", title: t.how_s2_title, description: t.how_s2_desc },
+    { number: "03", title: t.how_s3_title, description: t.how_s3_desc },
+  ];
+
   return (
     <section id="how-it-works" className="bg-[#f5f5f7]" style={{ padding: "80px 0" }}>
       <div className="max-w-[980px] mx-auto px-4 sm:px-6">
@@ -28,10 +19,10 @@ export default function HowItWorks() {
             className="font-semibold text-[#1d1d1f] mb-3"
             style={{ fontSize: 40, lineHeight: 1.1, letterSpacing: 0 }}
           >
-            How It Works
+            {t.how_title}
           </h2>
           <p className="text-[#7a7a7a] text-[21px] font-light max-w-xl mx-auto" style={{ letterSpacing: 0 }}>
-            Finding the right pet insurance takes less than 2 minutes.
+            {t.how_sub}
           </p>
         </div>
 

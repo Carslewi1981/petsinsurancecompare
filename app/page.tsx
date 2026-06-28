@@ -7,11 +7,14 @@ import StatBar from "@/components/StatBar";
 import HowItWorks from "@/components/HowItWorks";
 import PlanCard from "@/components/PlanCard";
 import { insurers } from "@/lib/insurers";
+import { useStore } from "@/lib/store";
 
 const topPlans = [...insurers].sort((a, b) => b.rating - a.rating).slice(0, 3);
 const providers = insurers.map((i) => ({ name: i.name, logo: i.logo, color: i.color }));
 
 export default function HomePage() {
+  const { t } = useStore();
+
   return (
     <>
       {/* Hero — dark tile */}
@@ -19,15 +22,13 @@ export default function HomePage() {
         className="flex flex-col justify-center overflow-hidden"
         style={{ background: "#272729", minHeight: 600, paddingTop: 44 }}
       >
-        <div
-          className="max-w-[980px] mx-auto px-4 sm:px-6 py-20 flex flex-col items-center text-center"
-        >
+        <div className="max-w-[980px] mx-auto px-4 sm:px-6 py-20 flex flex-col items-center text-center">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
             <span
               className="inline-block text-white text-[12px] font-semibold mb-6 px-4 py-1.5"
               style={{ background: "#0066cc", borderRadius: 9999, letterSpacing: "-0.12px" }}
             >
-              Free Comparison Tool
+              {t.hero_badge}
             </span>
           </motion.div>
 
@@ -38,11 +39,7 @@ export default function HomePage() {
             className="font-bebas text-white leading-none mb-6 max-w-3xl"
             style={{ fontSize: "clamp(48px, 8vw, 80px)", letterSpacing: "0.02em" }}
           >
-            PROTECT EVERY{" "}
-            <span style={{ color: "#2997ff" }}>PAW,</span>{" "}
-            <span style={{ color: "#2997ff" }}>WING</span>{" "}
-            &amp;{" "}
-            <span style={{ color: "#2997ff" }}>SCALE.</span>
+            {t.hero_h1}
           </motion.h1>
 
           <motion.p
@@ -52,7 +49,7 @@ export default function HomePage() {
             className="text-[#cccccc] max-w-2xl mb-10"
             style={{ fontSize: 21, lineHeight: 1.19, letterSpacing: "0.231px" }}
           >
-            Compare top pet insurance plans for dogs, cats, birds, reptiles, and exotic animals — in seconds.
+            {t.hero_sub}
           </motion.p>
 
           <motion.div
@@ -66,7 +63,7 @@ export default function HomePage() {
               className="flex items-center gap-2 bg-[#0066cc] text-white hover:bg-[#0071e3] transition-colors active:scale-95"
               style={{ fontSize: 18, fontWeight: 300, borderRadius: 9999, padding: "14px 28px" }}
             >
-              Compare Plans
+              {t.hero_cta1}
               <ArrowRight className="w-4 h-4" />
             </Link>
             <a
@@ -80,7 +77,7 @@ export default function HomePage() {
                 border: "1px solid #2997ff",
               }}
             >
-              How It Works
+              {t.hero_cta2}
             </a>
           </motion.div>
 
@@ -91,10 +88,10 @@ export default function HomePage() {
             className="mt-16 flex flex-wrap gap-10 justify-center"
           >
             {[
-              { label: "Providers", value: "8+" },
-              { label: "Animal Types", value: "7" },
-              { label: "Comparisons Daily", value: "50K+" },
-              { label: "Always Free", value: "Free" },
+              { label: t.stat_providers, value: "8+" },
+              { label: t.stat_animalTypes, value: "7" },
+              { label: t.stat_comparisons, value: "50K+" },
+              { label: t.stat_free, value: "✓" },
             ].map((s) => (
               <div key={s.label} className="text-center">
                 <div className="font-bebas text-white" style={{ fontSize: 40, lineHeight: 1.1 }}>
@@ -124,10 +121,10 @@ export default function HomePage() {
                 className="font-semibold text-[#1d1d1f] mb-2"
                 style={{ fontSize: 40, lineHeight: 1.1 }}
               >
-                Top Rated Plans
+                {t.feat_title}
               </h2>
               <p className="text-[#7a7a7a]" style={{ fontSize: 17, letterSpacing: "-0.374px" }}>
-                Our highest-rated providers right now
+                {t.feat_sub}
               </p>
             </div>
             <Link
@@ -135,7 +132,7 @@ export default function HomePage() {
               className="text-[#0066cc] hover:text-[#0071e3] transition-colors"
               style={{ fontSize: 17, letterSpacing: "-0.374px" }}
             >
-              See All Plans →
+              {t.feat_seeAll}
             </Link>
           </div>
 
@@ -154,7 +151,7 @@ export default function HomePage() {
             className="text-[#a1a1a6] text-center mb-10"
             style={{ fontSize: 12, letterSpacing: "-0.12px" }}
           >
-            Insurance Providers on Our Platform
+            {t.prov_title}
           </h3>
           <div className="flex flex-wrap gap-3 justify-center items-center">
             {providers.map((p) => (
@@ -180,17 +177,17 @@ export default function HomePage() {
             className="font-semibold text-white mb-4"
             style={{ fontSize: 40, lineHeight: 1.1 }}
           >
-            Ready to Find the Perfect Plan?
+            {t.cta_title}
           </h2>
           <p className="text-[#cccccc] mb-8" style={{ fontSize: 21, lineHeight: 1.19, letterSpacing: "0.231px" }}>
-            Compare coverage, pricing, and exclusions side-by-side — for free.
+            {t.cta_sub}
           </p>
           <Link
             href="/compare"
             className="inline-flex items-center gap-2 bg-[#0066cc] text-white hover:bg-[#0071e3] transition-colors active:scale-95"
             style={{ fontSize: 18, fontWeight: 300, borderRadius: 9999, padding: "14px 28px" }}
           >
-            Start Comparing Now
+            {t.cta_btn}
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>

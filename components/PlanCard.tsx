@@ -15,7 +15,7 @@ interface PlanCardProps {
 
 export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const { comparedIds, toggleCompare, setActiveModal, setContactInsurer } = useStore();
+  const { comparedIds, toggleCompare, setActiveModal, setContactInsurer, t } = useStore();
   const isSelected = comparedIds.includes(insurer.id);
 
   const price =
@@ -24,7 +24,7 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
       : insurer.monthlyPrice[animal] || 0;
 
   const animalLabel =
-    animal === "all" ? "from" : ANIMAL_TYPES.find((a) => a.id === animal)?.label || "";
+    animal === "all" ? t.card_from : ANIMAL_TYPES.find((a) => a.id === animal)?.label || "";
 
   const handleContact = () => {
     setContactInsurer(insurer);
@@ -42,7 +42,6 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
         border: isSelected ? "2px solid #0071e3" : "1px solid #e0e0e0",
       }}
     >
-      {/* Checkbox */}
       <div className="absolute top-4 right-4">
         <button
           onClick={() => toggleCompare(insurer.id)}
@@ -51,14 +50,12 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
             backgroundColor: isSelected ? "#0066cc" : "transparent",
             borderColor: isSelected ? "#0066cc" : "#d2d2d7",
           }}
-          title={isSelected ? "Remove from comparison" : "Add to comparison"}
         >
           {isSelected && <Check className="w-3 h-3 text-white" />}
         </button>
       </div>
 
       <div className="p-6">
-        {/* Header */}
         <div className="flex items-start gap-3 mb-5 pr-8">
           <div
             className="w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0"
@@ -79,7 +76,6 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
           </div>
         </div>
 
-        {/* Price */}
         <div className="mb-5">
           <div className="flex items-baseline gap-1">
             <span className="font-semibold text-[#1d1d1f]" style={{ fontSize: 34, letterSpacing: "-0.374px" }}>
@@ -88,20 +84,19 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
             <span className="text-[#7a7a7a] text-[17px]">/mo</span>
           </div>
           <div className="text-[#7a7a7a] text-[14px]" style={{ letterSpacing: "-0.224px" }}>
-            {animal === "all" ? "starting from" : `for ${animalLabel}s`}
+            {animal === "all" ? t.card_startingFrom : t.card_forAnimal.replace("{animal}", animalLabel)}
           </div>
         </div>
 
-        {/* Stats row */}
         <div
           className="grid grid-cols-4 gap-0 mb-5 bg-[#f5f5f7]"
           style={{ borderRadius: 11, overflow: "hidden" }}
         >
           {[
-            { label: "Reimburse", value: insurer.reimbursement },
-            { label: "Annual Max", value: insurer.maxAnnual },
-            { label: "Deductible", value: insurer.deductible },
-            { label: "Claims", value: insurer.claimsTime },
+            { label: t.card_reimburse, value: insurer.reimbursement },
+            { label: t.card_annualMax, value: insurer.maxAnnual },
+            { label: t.card_deductible, value: insurer.deductible },
+            { label: t.card_claims, value: insurer.claimsTime },
           ].map((stat, i) => (
             <div
               key={stat.label}
@@ -116,16 +111,14 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
           ))}
         </div>
 
-        {/* Rating */}
         <div className="flex items-center justify-between mb-4">
           <StarRating rating={insurer.rating} reviews={insurer.reviews} size="sm" />
-          <span className="text-[12px] text-[#7a7a7a]">App: ⭐ {insurer.appRating}</span>
+          <span className="text-[12px] text-[#7a7a7a]">{t.card_app} ⭐ {insurer.appRating}</span>
         </div>
 
-        {/* Animal tags */}
         <div className="flex flex-wrap gap-1.5 mb-4">
           {insurer.animals.map((a) => {
-            const at = ANIMAL_TYPES.find((t) => t.id === a);
+            const at = ANIMAL_TYPES.find((x) => x.id === a);
             return (
               <span
                 key={a}
@@ -139,17 +132,15 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
           })}
         </div>
 
-        {/* Expand toggle */}
         <button
           onClick={() => setExpanded(!expanded)}
           className="flex items-center gap-1 text-[14px] text-[#0066cc] mb-4 hover:text-[#0071e3] transition-colors"
           style={{ letterSpacing: "-0.224px" }}
         >
           {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-          {expanded ? "Hide Features" : "Show Features"}
+          {expanded ? t.card_hideFeatures : t.card_showFeatures}
         </button>
 
-        {/* Expanded features */}
         {expanded && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -157,7 +148,7 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
             className="mb-4 space-y-4"
           >
             <div>
-              <h4 className="text-[12px] font-semibold text-[#7a7a7a] mb-2">Covered</h4>
+              <h4 className="text-[12px] font-semibold text-[#7a7a7a] mb-2">{t.card_covered}</h4>
               <ul className="space-y-1">
                 {insurer.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-[14px] text-[#1d1d1f]" style={{ letterSpacing: "-0.224px" }}>
@@ -168,7 +159,7 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
               </ul>
             </div>
             <div>
-              <h4 className="text-[12px] font-semibold text-[#7a7a7a] mb-2">Not Covered</h4>
+              <h4 className="text-[12px] font-semibold text-[#7a7a7a] mb-2">{t.card_notCovered}</h4>
               <ul className="space-y-1">
                 {insurer.notCovered.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-[14px] text-[#7a7a7a]" style={{ letterSpacing: "-0.224px" }}>
@@ -183,12 +174,11 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
               style={{ borderRadius: 8 }}
             >
               <span>⏱</span>
-              Waiting period: {insurer.waitingPeriod}
+              {t.card_waitingPeriod} {insurer.waitingPeriod}
             </div>
           </motion.div>
         )}
 
-        {/* Actions */}
         <div className="flex gap-2">
           <button
             onClick={handleContact}
@@ -196,7 +186,7 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
             style={{ border: "1px solid #0066cc", borderRadius: 9999, letterSpacing: "-0.224px" }}
           >
             <Phone className="w-3 h-3" />
-            Contact
+            {t.card_contact}
           </button>
           <a
             href={insurer.contact.website}
@@ -206,7 +196,7 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
             style={{ borderRadius: 9999, letterSpacing: "-0.224px" }}
           >
             <Globe className="w-3 h-3" />
-            Get a Quote
+            {t.card_getQuote}
           </a>
         </div>
       </div>
