@@ -6,11 +6,12 @@ import Link from "next/link";
 import { ArrowRight, Heart } from "lucide-react";
 import { useStore } from "@/lib/store";
 
-// Each photo: real Unsplash URL + caption
+// Each photo: real Unsplash URL + caption + emoji fallback
 interface PetPhoto {
   url: string;
   caption: string;
   detail?: string;
+  fallback: string; // emoji shown when image fails to load
 }
 
 interface PetType {
@@ -43,14 +44,14 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare dog plans",
     riskNote: "ACL tears · Cancer · Hip dysplasia · Bloat",
     photos: [
-      { url: u("1587300003388-59208cc962cb"), caption: "Golden Retriever", detail: "Biscuit, 3 yrs" },
-      { url: u("1583337130417-3346a1be7dee"), caption: "French Bulldog", detail: "Luna, 2 yrs" },
-      { url: u("1552053831-71594a27632d"), caption: "Labrador", detail: "Buddy, 4 yrs" },
-      { url: u("1589941013453-ec89f33b5e95"), caption: "German Shepherd", detail: "Rex, 5 yrs" },
-      { url: u("1537151625747-768eb2c4c608"), caption: "Poodle", detail: "Coco, 1 yr" },
-      { url: u("1574158622682-e719686e78c7"), caption: "Dachshund", detail: "Pickle, 6 yrs" },
-      { url: u("1568572933382-74d440642117"), caption: "Bernese Mt Dog", detail: "Moose, 2 yrs" },
-      { url: u("1561037404-61cd46aa615b"), caption: "Great Dane", detail: "Zeus, 1.5 yrs" },
+      { url: u("1587300003388-59208cc962cb"), caption: "Golden Retriever", detail: "Biscuit, 3 yrs", fallback: "🐕" },
+      { url: u("1583337130417-3346a1be7dee"), caption: "French Bulldog", detail: "Luna, 2 yrs", fallback: "🐶" },
+      { url: u("1552053831-71594a27632d"), caption: "Labrador", detail: "Buddy, 4 yrs", fallback: "🦮" },
+      { url: u("1589941013453-ec89f33b5e95"), caption: "German Shepherd", detail: "Rex, 5 yrs", fallback: "🐕‍🦺" },
+      { url: u("1537151625747-768eb2c4c608"), caption: "Poodle", detail: "Coco, 1 yr", fallback: "🐩" },
+      { url: u("1574158622682-e719686e78c7"), caption: "Dachshund", detail: "Pickle, 6 yrs", fallback: "🌭" },
+      { url: u("1568572933382-74d440642117"), caption: "Bernese Mt Dog", detail: "Moose, 2 yrs", fallback: "🐕" },
+      { url: u("1561037404-61cd46aa615b"), caption: "Great Dane", detail: "Zeus, 1.5 yrs", fallback: "🐶" },
     ],
   },
   {
@@ -65,14 +66,14 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare cat plans",
     riskNote: "HCM · Kidney disease · Urinary blockages · Cancer",
     photos: [
-      { url: u("1574144611937-0df059b5ef3e"), caption: "Maine Coon", detail: "Noodle, 4 yrs" },
-      { url: u("1533743983669-94fa5c4338ec"), caption: "Orange Tabby", detail: "Mango, 2 yrs" },
-      { url: u("1513245206731-5be0d97834ba"), caption: "Siamese", detail: "Cleo, 3 yrs" },
-      { url: u("1478098711619-5ab0361d5aa6"), caption: "Persian", detail: "Boba, 5 yrs" },
-      { url: u("1543466835-00a7907e9de1"), caption: "Ragdoll", detail: "Mochi, 1 yr" },
-      { url: u("1516734212186-a5424268c6d8"), caption: "Bengal", detail: "Leo, 3 yrs" },
-      { url: u("1561948955-570b270e7c36"), caption: "Scottish Fold", detail: "Ginger, 2 yrs" },
-      { url: u("1596854407944-bf71f2cd0462"), caption: "British Shorthair", detail: "Duke, 4 yrs" },
+      { url: u("1574144611937-0df059b5ef3e"), caption: "Maine Coon", detail: "Noodle, 4 yrs", fallback: "🐈" },
+      { url: u("1533743983669-94fa5c4338ec"), caption: "Orange Tabby", detail: "Mango, 2 yrs", fallback: "🐱" },
+      { url: u("1513245206731-5be0d97834ba"), caption: "Siamese", detail: "Cleo, 3 yrs", fallback: "😺" },
+      { url: u("1478098711619-5ab0361d5aa6"), caption: "Persian", detail: "Boba, 5 yrs", fallback: "😸" },
+      { url: u("1611325132657-f0540cbf0d42"), caption: "Ragdoll", detail: "Mochi, 1 yr", fallback: "😻" },
+      { url: u("1520315342629-6eb75ab80ded"), caption: "Bengal", detail: "Leo, 3 yrs", fallback: "🐈‍⬛" },
+      { url: u("1494094892896-7f14a4433b7a"), caption: "Scottish Fold", detail: "Ginger, 2 yrs", fallback: "🐈" },
+      { url: u("1596854407944-bf71f2cd0462"), caption: "British Shorthair", detail: "Duke, 4 yrs", fallback: "🐱" },
     ],
   },
   {
@@ -87,14 +88,14 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare bird plans",
     riskNote: "Psittacosis · Proventricular disease · Crop issues · Feather destructive behavior",
     photos: [
-      { url: u("1552728077-57c0d571a4d0"), caption: "African Grey", detail: "Einstein, 12 yrs" },
-      { url: u("1552728057-5b9fef94fd5d"), caption: "Macaw", detail: "Kiwi, 8 yrs" },
-      { url: u("1552728039-d0b8cb25b238"), caption: "Cockatoo", detail: "Coco, 15 yrs" },
-      { url: u("1552728082-af6be6be2d87"), caption: "Conure", detail: "Mango, 3 yrs" },
-      { url: u("1606574189447-cd29f7e33c52"), caption: "Lovebirds", detail: "Ruby & Gem" },
-      { url: u("1598128558393-70ff21433be0"), caption: "Cockatiel", detail: "Sunny, 5 yrs" },
-      { url: u("1612177537525-bfb7bde1a58d"), caption: "Budgerigar", detail: "Sky, 2 yrs" },
-      { url: u("1590005354167-6da97870c757"), caption: "Amazon Parrot", detail: "Paco, 20 yrs" },
+      { url: u("1552728077-57c0d571a4d0"), caption: "African Grey", detail: "Einstein, 12 yrs", fallback: "🦜" },
+      { url: u("1552728057-5b9fef94fd5d"), caption: "Macaw", detail: "Kiwi, 8 yrs", fallback: "🦚" },
+      { url: u("1552728039-d0b8cb25b238"), caption: "Cockatoo", detail: "Coco, 15 yrs", fallback: "🦢" },
+      { url: u("1552728082-af6be6be2d87"), caption: "Conure", detail: "Mango, 3 yrs", fallback: "🐦" },
+      { url: u("1606574189447-cd29f7e33c52"), caption: "Lovebirds", detail: "Ruby & Gem", fallback: "🦜" },
+      { url: u("1598128558393-70ff21433be0"), caption: "Cockatiel", detail: "Sunny, 5 yrs", fallback: "🐦" },
+      { url: u("1612177537525-bfb7bde1a58d"), caption: "Budgerigar", detail: "Sky, 2 yrs", fallback: "🦜" },
+      { url: u("1590005354167-6da97870c757"), caption: "Amazon Parrot", detail: "Paco, 20 yrs", fallback: "🦜" },
     ],
   },
   {
@@ -109,14 +110,14 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare rabbit plans",
     riskNote: "GI stasis · Dental disease · Uterine cancer (unspayed) · E. cuniculi",
     photos: [
-      { url: u("1585110396000-c9ffd4e4b308"), caption: "Holland Lop", detail: "Pebbles, 3 yrs" },
-      { url: u("1535930891745-5a8abdc7be85"), caption: "Mini Rex", detail: "Velvet, 2 yrs" },
-      { url: u("1595433707802-6b2626ef1c91"), caption: "Flemish Giant", detail: "Goliath, 4 yrs" },
-      { url: u("1607748851687-ba9a10438621"), caption: "Lionhead", detail: "Fluffy, 1 yr" },
-      { url: u("1548767797-d8c844163c4a"), caption: "Dwarf Rabbit", detail: "Tiny, 2 yrs" },
-      { url: u("1612804893023-7f19ca5e39ab"), caption: "Rex Rabbit", detail: "Copper, 5 yrs" },
-      { url: u("1586773860383-dcd72352564f"), caption: "English Angora", detail: "Snowball, 3 yrs" },
-      { url: u("1516206851442-2e4ce1c54a5e"), caption: "Dutch Rabbit", detail: "Domino, 2 yrs" },
+      { url: u("1585110396000-c9ffd4e4b308"), caption: "Holland Lop", detail: "Pebbles, 3 yrs", fallback: "🐇" },
+      { url: u("1535930891745-5a8abdc7be85"), caption: "Mini Rex", detail: "Velvet, 2 yrs", fallback: "🐰" },
+      { url: u("1595433707802-6b2626ef1c91"), caption: "Flemish Giant", detail: "Goliath, 4 yrs", fallback: "🐇" },
+      { url: u("1607748851687-ba9a10438621"), caption: "Lionhead", detail: "Fluffy, 1 yr", fallback: "🐰" },
+      { url: u("1548767797-d8c844163c4a"), caption: "Dwarf Rabbit", detail: "Tiny, 2 yrs", fallback: "🐇" },
+      { url: u("1612804893023-7f19ca5e39ab"), caption: "Rex Rabbit", detail: "Copper, 5 yrs", fallback: "🐰" },
+      { url: u("1586773860383-dcd72352564f"), caption: "English Angora", detail: "Snowball, 3 yrs", fallback: "🐇" },
+      { url: u("1516206851442-2e4ce1c54a5e"), caption: "Dutch Rabbit", detail: "Domino, 2 yrs", fallback: "🐰" },
     ],
   },
   {
@@ -131,14 +132,14 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare reptile plans",
     riskNote: "Metabolic bone disease · Egg-binding · Respiratory infections · Parasites",
     photos: [
-      { url: u("1602491453631-e2a5ad90a131"), caption: "Bearded Dragon", detail: "Spike, 3 yrs" },
-      { url: u("1551800461-3957d8ab4f5d"), caption: "Ball Python", detail: "Monty, 5 yrs" },
-      { url: u("1618225660875-f6fb9a8fda14"), caption: "Leopard Gecko", detail: "Leo, 2 yrs" },
-      { url: u("1509909756405-be0199881695"), caption: "Chameleon", detail: "Camo, 3 yrs" },
-      { url: u("1531386151447-fd76ad50012f"), caption: "Russian Tortoise", detail: "Tank, 10 yrs" },
-      { url: u("1565366896067-bf3b1571e0cd"), caption: "Blue-Tongue Skink", detail: "Blueberry, 4 yrs" },
-      { url: u("1558618047-3c8ceda4852b"), caption: "Corn Snake", detail: "Rusty, 6 yrs" },
-      { url: u("1620576618581-f4d67a49f3e9"), caption: "Crested Gecko", detail: "Velcro, 4 yrs" },
+      { url: u("1602491453631-e2a5ad90a131"), caption: "Bearded Dragon", detail: "Spike, 3 yrs", fallback: "🦎" },
+      { url: u("1551800461-3957d8ab4f5d"), caption: "Ball Python", detail: "Monty, 5 yrs", fallback: "🐍" },
+      { url: u("1618225660875-f6fb9a8fda14"), caption: "Leopard Gecko", detail: "Leo, 2 yrs", fallback: "🦎" },
+      { url: u("1509909756405-be0199881695"), caption: "Chameleon", detail: "Camo, 3 yrs", fallback: "🦎" },
+      { url: u("1531386151447-fd76ad50012f"), caption: "Russian Tortoise", detail: "Tank, 10 yrs", fallback: "🐢" },
+      { url: u("1565366896067-bf3b1571e0cd"), caption: "Blue-Tongue Skink", detail: "Blueberry, 4 yrs", fallback: "🦎" },
+      { url: u("1558618047-3c8ceda4852b"), caption: "Corn Snake", detail: "Rusty, 6 yrs", fallback: "🐍" },
+      { url: u("1620576618581-f4d67a49f3e9"), caption: "Crested Gecko", detail: "Velcro, 4 yrs", fallback: "🦎" },
     ],
   },
   {
@@ -153,14 +154,14 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare exotic plans",
     riskNote: "Adrenal disease (ferrets) · Malocclusion · Respiratory infections · Ovarian cysts",
     photos: [
-      { url: u("1548767797-d8c844163c4a"), caption: "Guinea Pig", detail: "Popcorn, 2 yrs" },
-      { url: u("1615631648086-10f47fda1c08"), caption: "Ferret", detail: "Bandit, 3 yrs" },
-      { url: u("1548767797-d8c844163c4a"), caption: "Hamster", detail: "Nibbles, 1 yr" },
-      { url: u("1518020382113-b1975f8f4e2c"), caption: "Chinchilla", detail: "Dusty, 4 yrs" },
-      { url: u("1474511320926-3411b4add9a2"), caption: "Hedgehog", detail: "Prickles, 2 yrs" },
-      { url: u("1534361960057-19f4efef7f12"), caption: "Sugar Glider", detail: "Glide, 5 yrs" },
-      { url: u("1548767797-d8c844163c4a"), caption: "Degu", detail: "Chewy, 3 yrs" },
-      { url: u("1593134491977-cb79a8f95524"), caption: "Fancy Rat", detail: "Remy, 1 yr" },
+      { url: u("1548767797-d8c844163c4a"), caption: "Guinea Pig", detail: "Popcorn, 2 yrs", fallback: "🐾" },
+      { url: u("1615631648086-10f47fda1c08"), caption: "Ferret", detail: "Bandit, 3 yrs", fallback: "🦦" },
+      { url: u("1474511320926-3411b4add9a2"), caption: "Hedgehog", detail: "Prickles, 2 yrs", fallback: "🦔" },
+      { url: u("1518020382113-b1975f8f4e2c"), caption: "Chinchilla", detail: "Dusty, 4 yrs", fallback: "🐭" },
+      { url: u("1534361960057-19f4efef7f12"), caption: "Sugar Glider", detail: "Glide, 5 yrs", fallback: "🐿️" },
+      { url: u("1593134491977-cb79a8f95524"), caption: "Fancy Rat", detail: "Remy, 1 yr", fallback: "🐁" },
+      { url: u("1612804893023-7f19ca5e39ab"), caption: "Hamster", detail: "Nibbles, 1 yr", fallback: "🐹" },
+      { url: u("1586773860383-dcd72352564f"), caption: "Rabbit Mix", detail: "Bun, 2 yrs", fallback: "🐰" },
     ],
   },
 ];
@@ -191,7 +192,8 @@ function PhotoCard({
   accentColor: string;
   bgColor: string;
 }) {
-  const height = size === "large" ? "100%" : "100%";
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   return (
     <motion.div
@@ -201,20 +203,29 @@ function PhotoCard({
       style={{
         borderRadius: size === "large" ? 16 : 12,
         background: bgColor,
-        height,
+        height: "100%",
       }}
     >
+      {/* Emoji fallback — shown until image loads or on error */}
+      {(!imgLoaded || imgError) && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+          <span style={{ fontSize: size === "large" ? 64 : size === "medium" ? 36 : 24, lineHeight: 1 }}>
+            {photo.fallback}
+          </span>
+        </div>
+      )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={photo.url}
-        alt={photo.caption}
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
-        style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}
-        loading="lazy"
-        onError={(e) => {
-          (e.target as HTMLImageElement).style.display = "none";
-        }}
-      />
+      {!imgError && (
+        <img
+          src={photo.url}
+          alt={photo.caption}
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: imgLoaded ? 1 : 0, transition: "opacity 0.3s" }}
+          loading="lazy"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+        />
+      )}
       {/* Bottom gradient + caption */}
       <div
         className="absolute bottom-0 left-0 right-0 px-3 py-2.5"
