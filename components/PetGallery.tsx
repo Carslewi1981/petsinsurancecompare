@@ -46,7 +46,7 @@ const PET_TYPES: PetType[] = [
     riskNote: "ACL tears · Cancer · Hip dysplasia · Bloat",
     photos: [
       { url: u("1530281700549-e82e7bf110d6"), caption: "Golden Retriever", detail: "Buddy, 4 yrs", fallback: "🐕" },
-      { url: u("1668208363137-7ebc4ce6b7b7"), caption: "Siberian Husky", detail: "Nova, 3 yrs", fallback: "🐕" },
+      { url: u("1550973078-ce53733d6117"), caption: "Siberian Husky", detail: "Nova, 3 yrs", fallback: "🐕" },
       { url: u("1521907554502-7440e4702fc3"), caption: "French Bulldog", detail: "Gizmo, 2 yrs", fallback: "🐶" },
       { url: u("1605725657590-b2cf0d31b1a5"), caption: "German Shepherd", detail: "Rex, 5 yrs", fallback: "🦮" },
       { url: u("1617895153857-82fe79adfcd4"), caption: "Husky Puppy", detail: "Koda, 6 mos", fallback: "🐕" },
@@ -67,13 +67,13 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare cat plans",
     riskNote: "HCM · Kidney disease · Urinary blockages · Cancer",
     photos: [
-      { url: u("1664392321975-c96ff960988c"), caption: "Persian", detail: "Duchess, 5 yrs", fallback: "🐱" },
+      { url: u("1598017720921-946225de6f04"), caption: "Persian", detail: "Duchess, 5 yrs", fallback: "🐱" },
       { url: u("1472491235688-bdc81a63246e"), caption: "Siamese", detail: "Milo, 3 yrs", fallback: "😺" },
-      { url: u("1585137173132-cf49e10ad27d"), caption: "Persian", detail: "Snowflake, 4 yrs", fallback: "🐈" },
+      { url: u("1547565295-182fb8657b6b"), caption: "Sphynx", detail: "Wrinkles, 4 yrs", fallback: "🐈" },
       { url: u("1488740304459-45c4277e7daf"), caption: "Siamese", detail: "Bella, 2 yrs", fallback: "🐱" },
-      { url: u("1591429939960-b7d5add10b5c"), caption: "Persian", detail: "Cleo, 7 yrs", fallback: "😻" },
-      { url: u("1611668070024-4b53a3908386"), caption: "Siamese", detail: "Cosmo, 4 yrs", fallback: "🐈" },
-      { url: u("1604242251651-546f5f05ccb7"), caption: "Persian", detail: "Pearl, 3 yrs", fallback: "🐱" },
+      { url: u("1626881255770-2397375aad8d"), caption: "Sphynx", detail: "Pharaoh, 3 yrs", fallback: "😻" },
+      { url: u("1585137173132-cf49e10ad27d"), caption: "Persian", detail: "Snowflake, 4 yrs", fallback: "🐈" },
+      { url: u("1604242251651-546f5f05ccb7"), caption: "Persian", detail: "Pearl, 5 yrs", fallback: "🐱" },
       { url: u("1592652426689-4e4f12c4aef5"), caption: "Siamese", detail: "Aria, 1 yr", fallback: "😺" },
     ],
   },
@@ -133,14 +133,14 @@ const PET_TYPES: PetType[] = [
     ctaLabel: "Compare reptile plans",
     riskNote: "Metabolic bone disease · Egg-binding · Respiratory infections · Parasites",
     photos: [
-      { url: u("1588271174559-1f5dc8750e5f"), caption: "Gecko", detail: "Spike, 3 yrs", fallback: "🦎" },
-      { url: u("1661481072791-1df445889e4b"), caption: "Gecko", detail: "Monty, 5 yrs", fallback: "🦎" },
-      { url: u("1553722665-ed16a69677d6"), caption: "Lizard", detail: "Leo, 2 yrs", fallback: "🦎" },
-      { url: u("1636370395847-e0781efa45e6"), caption: "Gecko", detail: "Camo, 3 yrs", fallback: "🦎" },
-      { url: u("1572650117973-7d78c3e9aedf"), caption: "Crested Gecko", detail: "Tank, 4 yrs", fallback: "🦎" },
-      { url: u("1510921302580-852ad8ef2a79"), caption: "Leopard Gecko", detail: "Rusty, 2 yrs", fallback: "🦎" },
-      { url: u("1600029175350-55029fd344b5"), caption: "Gecko", detail: "Leafy, 6 yrs", fallback: "🦎" },
-      { url: u("1576223205620-0e3aeaa1a84c"), caption: "Gecko", detail: "Velcro, 3 yrs", fallback: "🦎" },
+      { url: u("1619816128374-a6b4766ca92c"), caption: "Bearded Dragon", detail: "Spike, 3 yrs", fallback: "🦎" },
+      { url: u("1611245241464-97cf73d233a1"), caption: "Ball Python", detail: "Coral, 4 yrs", fallback: "🐍" },
+      { url: u("1588271174559-1f5dc8750e5f"), caption: "Crested Gecko", detail: "Camo, 2 yrs", fallback: "🦎" },
+      { url: u("1764459931084-449223c5e955"), caption: "Green Iguana", detail: "Verde, 6 yrs", fallback: "🦎" },
+      { url: u("1572650117973-7d78c3e9aedf"), caption: "Leopard Gecko", detail: "Dotty, 3 yrs", fallback: "🦎" },
+      { url: u("1707478492106-31ecc0c8776f"), caption: "Corn Snake", detail: "Ziggy, 5 yrs", fallback: "🐍" },
+      { url: u("1601558729644-8d457193fbb0"), caption: "Bearded Dragon", detail: "Sandy, 4 yrs", fallback: "🦎" },
+      { url: u("1654541763260-a1fcbd18da89"), caption: "Green Lizard", detail: "Rocky, 2 yrs", fallback: "🦎" },
     ],
   },
   {
@@ -157,12 +157,12 @@ const PET_TYPES: PetType[] = [
     photos: [
       { url: u("1647045965738-94ce0fc81325"), caption: "Ferret", detail: "Bandit, 3 yrs", fallback: "🦦" },
       { url: u("1612267168669-679c961c5b31"), caption: "Guinea Pig", detail: "Peanut, 2 yrs", fallback: "🐾" },
-      { url: u("1533152162573-93ad94eb20f6"), caption: "Guinea Pig", detail: "Cheddar, 3 yrs", fallback: "🐾" },
+      { url: u("1534278931827-8a259344abe7"), caption: "Hedgehog", detail: "Hazel, 1 yr", fallback: "🦔" },
       { url: u("1571941727012-783f3768de46"), caption: "Ferret", detail: "Noodle, 4 yrs", fallback: "🦦" },
+      { url: u("1533152162573-93ad94eb20f6"), caption: "Guinea Pig", detail: "Cheddar, 3 yrs", fallback: "🐾" },
+      { url: u("1622227056993-6e7f88420855"), caption: "Hedgehog", detail: "Bramble, 2 yrs", fallback: "🦔" },
       { url: u("1512087499053-023f060e2cea"), caption: "Guinea Pig", detail: "Caramel, 1 yr", fallback: "🐾" },
-      { url: u("1576518985149-4f63dfabf9d6"), caption: "Ferret", detail: "Weasel, 2 yrs", fallback: "🦦" },
-      { url: u("1512483652399-7a1f99aa0dd3"), caption: "Guinea Pig", detail: "Marshmallow, 2 yrs", fallback: "🐾" },
-      { url: u("1551148408-9b3cc5e1add6"), caption: "Ferret", detail: "Slinky, 1 yr", fallback: "🦦" },
+      { url: u("1470854989922-5be2f7456d78"), caption: "Hedgehog", detail: "Spike, 3 yrs", fallback: "🦔" },
     ],
   },
 ];
@@ -197,12 +197,14 @@ function PhotoCard({
   const [imgError, setImgError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
-  // Handle already-cached images that fire onLoad before React can attach the handler
+  // Reset state when URL changes (e.g. HMR, tab switch) and handle pre-cached images
   useEffect(() => {
+    setImgLoaded(false);
+    setImgError(false);
     if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
       setImgLoaded(true);
     }
-  }, []);
+  }, [photo.url]);
 
   return (
     <motion.div
