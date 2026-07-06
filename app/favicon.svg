@@ -1,0 +1,23 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <mask id="paw-mask">
+      <rect width="64" height="64" fill="white"/>
+      <g transform="translate(25 41) rotate(-8)">
+        <ellipse cx="0" cy="0" rx="8" ry="6.5" fill="black"/>
+        <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" fill="black"/>
+        <ellipse cx="-3.5" cy="-15" rx="4" ry="5" fill="black"/>
+        <ellipse cx="4" cy="-15" rx="4" ry="5" fill="black"/>
+        <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" fill="black"/>
+      </g>
+      <g transform="translate(44 22) rotate(15) scale(0.52)">
+        <ellipse cx="0" cy="0" rx="8" ry="6.5" fill="black"/>
+        <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" fill="black"/>
+        <ellipse cx="-3.5" cy="-15" rx="4" ry="5" fill="black"/>
+        <ellipse cx="4" cy="-15" rx="4" ry="5" fill="black"/>
+        <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" fill="black"/>
+      </g>
+    </mask>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#0c0c0d"/>
+  <circle cx="32" cy="32" r="28" fill="#c9a96e" mask="url(#paw-mask)"/>
+</svg>

@@ -92,23 +92,46 @@ export default function Navbar() {
       >
         <div className="max-w-[1200px] mx-auto px-6 h-full flex items-center justify-between">
           {/* Wordmark */}
-          <Link href="/" className="flex items-center gap-1 group">
-            <span
-              className="font-[var(--font-playfair-next)] italic text-white leading-none tracking-tight"
-              style={{ fontSize: 20, fontWeight: 500 }}
-            >
-              PetPlan
-            </span>
-            <span
-              className="font-[var(--font-inter-next)] text-white/40 leading-none ml-1"
-              style={{ fontSize: 11, fontWeight: 300, letterSpacing: "0.18em", textTransform: "uppercase", marginTop: 3 }}
-            >
-              Compare
-            </span>
-            <span
-              className="w-1.5 h-1.5 rounded-full ml-1.5 group-hover:scale-125 transition-transform"
-              style={{ background: "#c9a96e", marginTop: 2 }}
-            />
+          <Link href="/" className="flex items-center gap-3 group">
+            {/* Family paw mark */}
+            <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <mask id="nav-paw-mask">
+                  <rect width="64" height="64" fill="white"/>
+                  {/* Big paw */}
+                  <g transform="translate(25 41) rotate(-8)">
+                    <ellipse cx="0" cy="0" rx="8" ry="6.5" fill="black"/>
+                    <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" fill="black"/>
+                    <ellipse cx="-3.5" cy="-15" rx="4" ry="5" fill="black"/>
+                    <ellipse cx="4" cy="-15" rx="4" ry="5" fill="black"/>
+                    <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" fill="black"/>
+                  </g>
+                  {/* Small paw */}
+                  <g transform="translate(44 22) rotate(15) scale(0.52)">
+                    <ellipse cx="0" cy="0" rx="8" ry="6.5" fill="black"/>
+                    <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" fill="black"/>
+                    <ellipse cx="-3.5" cy="-15" rx="4" ry="5" fill="black"/>
+                    <ellipse cx="4" cy="-15" rx="4" ry="5" fill="black"/>
+                    <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" fill="black"/>
+                  </g>
+                </mask>
+              </defs>
+              <circle cx="32" cy="32" r="30" fill="#c9a96e" mask="url(#nav-paw-mask)"/>
+            </svg>
+            <div className="flex items-baseline gap-1">
+              <span
+                className="font-[var(--font-playfair-next)] italic text-white leading-none tracking-tight"
+                style={{ fontSize: 20, fontWeight: 500 }}
+              >
+                PetPlan
+              </span>
+              <span
+                className="font-[var(--font-inter-next)] text-white/40 leading-none"
+                style={{ fontSize: 11, fontWeight: 300, letterSpacing: "0.18em", textTransform: "uppercase", marginTop: 3 }}
+              >
+                Compare
+              </span>
+            </div>
           </Link>
 
           {/* Desktop nav */}
