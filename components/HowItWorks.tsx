@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useStore } from "@/lib/store";
 
 export default function HowItWorks() {
@@ -12,43 +13,87 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="bg-[#f5f5f7]" style={{ padding: "80px 0" }}>
-      <div className="max-w-[980px] mx-auto px-4 sm:px-6">
-        <div className="text-center mb-16">
-          <h2
-            className="font-semibold text-[#1d1d1f] mb-3"
-            style={{ fontSize: 40, lineHeight: 1.1, letterSpacing: 0 }}
+    <section id="how-it-works" style={{ background: "#faf8f4", padding: "140px 0" }}>
+      <div className="max-w-[1200px] mx-auto px-6">
+        {/* Section header */}
+        <div className="flex flex-col md:flex-row md:items-end gap-8 mb-20">
+          <div className="flex-1">
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#c9a96e", fontWeight: 500, marginBottom: 14 }}
+            >
+              The Process
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 18 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="font-[var(--font-playfair-next)]"
+              style={{ fontSize: "clamp(36px, 5vw, 60px)", fontWeight: 500, color: "#1a1814", lineHeight: 1.15, letterSpacing: "-0.025em" }}
+            >
+              {t.how_title}
+            </motion.h2>
+          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            style={{ fontSize: 16, lineHeight: 1.7, color: "#6b6560", maxWidth: 340 }}
           >
-            {t.how_title}
-          </h2>
-          <p className="text-[#7a7a7a] text-[21px] font-light max-w-xl mx-auto" style={{ letterSpacing: 0 }}>
             {t.how_sub}
-          </p>
+          </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {steps.map((step) => (
-            <div
+        {/* Horizontal rule */}
+        <div className="rule-gold mb-0" />
+
+        {/* Steps */}
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          {steps.map((step, i) => (
+            <motion.div
               key={step.number}
-              className="bg-white border border-[#e0e0e0] p-6"
-              style={{ borderRadius: 18 }}
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              className="relative py-14"
+              style={{
+                borderRight: i < 2 ? "1px solid rgba(0,0,0,0.07)" : "none",
+                paddingLeft: i === 0 ? 0 : 48,
+                paddingRight: i === 2 ? 0 : 48,
+                borderTop: "1px solid rgba(0,0,0,0.07)",
+              }}
             >
+              {/* Big number */}
               <div
-                className="font-semibold text-[#0066cc] mb-4"
-                style={{ fontSize: 34, lineHeight: 1.47, letterSpacing: "-0.374px" }}
+                className="font-[var(--font-bebas-next)] mb-6"
+                style={{
+                  fontSize: 80,
+                  lineHeight: 1,
+                  color: "rgba(201,169,110,0.15)",
+                  letterSpacing: "0.02em",
+                  userSelect: "none",
+                }}
               >
                 {step.number}
               </div>
+
+              {/* Gold dot accent */}
+              <div className="w-2 h-2 rounded-full mb-5" style={{ background: "#c9a96e" }} />
+
               <h3
-                className="font-semibold text-[#1d1d1f] mb-2"
-                style={{ fontSize: 21, lineHeight: 1.19, letterSpacing: "0.231px" }}
+                style={{ fontSize: 20, fontWeight: 600, color: "#1a1814", marginBottom: 10, letterSpacing: "-0.015em", lineHeight: 1.3 }}
               >
                 {step.title}
               </h3>
-              <p className="text-[#7a7a7a]" style={{ fontSize: 17, lineHeight: 1.47, letterSpacing: "-0.374px" }}>
+              <p style={{ fontSize: 14, lineHeight: 1.75, color: "#6b6560" }}>
                 {step.description}
               </p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

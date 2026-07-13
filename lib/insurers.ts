@@ -28,7 +28,7 @@ export const insurers: Insurer[] = [
   {
     id: "healthy-paws",
     name: "Healthy Paws",
-    logo: "🐾",
+    logo: "",
     tagline: "No annual or lifetime limits on claim payouts",
     color: "#0066cc",
     rating: 4.8,
@@ -66,7 +66,7 @@ export const insurers: Insurer[] = [
   {
     id: "trupanion",
     name: "Trupanion",
-    logo: "🦮",
+    logo: "",
     tagline: "Pays your vet directly — no waiting for reimbursement",
     color: "#DC2626",
     rating: 4.7,
@@ -104,7 +104,7 @@ export const insurers: Insurer[] = [
   {
     id: "embrace",
     name: "Embrace Pet Insurance",
-    logo: "💙",
+    logo: "",
     tagline: "Comprehensive coverage with a diminishing deductible",
     color: "#7C3AED",
     rating: 4.6,
@@ -142,7 +142,7 @@ export const insurers: Insurer[] = [
   {
     id: "nationwide",
     name: "Nationwide Pet",
-    logo: "🏛️",
+    logo: "",
     tagline: "The only major insurer covering exotic pets & birds",
     color: "#1E3A8A",
     rating: 4.3,
@@ -180,7 +180,7 @@ export const insurers: Insurer[] = [
   {
     id: "aspca",
     name: "ASPCA Pet Health",
-    logo: "🐶",
+    logo: "",
     tagline: "Trusted by millions — backed by the ASPCA name",
     color: "#059669",
     rating: 4.4,
@@ -218,7 +218,7 @@ export const insurers: Insurer[] = [
   {
     id: "lemonade",
     name: "Lemonade Pet",
-    logo: "🍋",
+    logo: "",
     tagline: "AI-powered instant claims — often paid in seconds",
     color: "#FF69B4",
     rating: 4.5,
@@ -256,7 +256,7 @@ export const insurers: Insurer[] = [
   {
     id: "figo",
     name: "Figo Pet Insurance",
-    logo: "⚡",
+    logo: "",
     tagline: "Up to 100% reimbursement with cloud-based claims",
     color: "#0891B2",
     rating: 4.4,
@@ -294,7 +294,7 @@ export const insurers: Insurer[] = [
   {
     id: "spot",
     name: "Spot Pet Insurance",
-    logo: "🎯",
+    logo: "",
     tagline: "Fully customizable plans for every budget",
     color: "#D97706",
     rating: 4.3,
@@ -332,7 +332,7 @@ export const insurers: Insurer[] = [
   {
     id: "pets-best",
     name: "Pets Best",
-    logo: "🏆",
+    logo: "",
     tagline: "One of the most affordable plans with no age limits",
     color: "#0891B2",
     rating: 4.5,
@@ -370,7 +370,7 @@ export const insurers: Insurer[] = [
   {
     id: "metlife-pet",
     name: "MetLife Pet",
-    logo: "🏛️",
+    logo: "",
     tagline: "Backed by MetLife's century of insurance expertise",
     color: "#1D4ED8",
     rating: 4.4,
@@ -408,7 +408,7 @@ export const insurers: Insurer[] = [
   {
     id: "fetch",
     name: "Fetch Pet Insurance",
-    logo: "🎾",
+    logo: "",
     tagline: "The most comprehensive coverage — exam fees included",
     color: "#7C3AED",
     rating: 4.6,
@@ -446,7 +446,7 @@ export const insurers: Insurer[] = [
   {
     id: "pumpkin",
     name: "Pumpkin Pet Insurance",
-    logo: "🎃",
+    logo: "",
     tagline: "90% back on vet bills — preventive care included",
     color: "#EA580C",
     rating: 4.5,

@@ -340,10 +340,10 @@ export default function VetCostSection() {
           className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-4"
         >
           {[
-            { value: "1 in 3", label: "pets need emergency care each year" },
-            { value: "$5,000+", label: "average emergency vet bill" },
-            { value: "44%", label: "of pet owners couldn't cover a $1K vet bill" },
-            { value: "$17/mo", label: "lowest pet insurance starting price" },
+            { value: "1 in 3", label: "pets need unexpected vet care each year*" },
+            { value: "$3,000–$8,000", label: "typical major surgery cost range*" },
+            { value: "44%", label: "of pet owners couldn't cover a $1K vet bill*" },
+            { value: "$17/mo", label: "lowest listed insurance starting price" },
           ].map((s) => (
             <div
               key={s.label}
@@ -362,6 +362,10 @@ export default function VetCostSection() {
             </div>
           ))}
         </motion.div>
+
+        <p style={{ fontSize: 10, color: "rgba(255,255,255,0.18)", marginTop: 16, lineHeight: 1.6 }}>
+          * Cost ranges sourced from AVMA veterinary fee surveys and published industry data. Actual costs vary by location, provider, and individual case. Insurance estimates assume a standard 80% reimbursement after deductible.
+        </p>
 
       </div>
     </section>

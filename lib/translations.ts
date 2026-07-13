@@ -78,7 +78,7 @@ const en: T = {
   how_s3_desc: "View plans side-by-side, compare features and exclusions, then contact providers directly.",
   footer_desc: "The independent pet insurance comparison platform. Compare top providers for every animal type.",
   footer_compare: "Compare", footer_resources: "Resources", footer_company: "Company",
-  footer_disclaimer: "Disclaimer: PetPlan Compare is an independent comparison platform and is not affiliated with any insurance provider listed. Plan details, pricing, and availability are subject to change. Always verify coverage details directly with the provider before purchasing.",
+  footer_disclaimer: "PetPlan Compare is an independent comparison tool. We are not an insurance company, broker, or agent. No provider pays for placement or ranking — all 12 providers are shown in the same standard format. Prices shown are estimates based on publicly available information and will vary based on your pet's age, breed, and location. Always get a direct quote from the provider before purchasing.",
   footer_rights: "All rights reserved.",
   footer_dogs: "Dogs Insurance", footer_cats: "Cats Insurance", footer_birds: "Birds Insurance",
   footer_rabbits: "Rabbits Insurance", footer_reptiles: "Reptiles Insurance", footer_exotic: "Exotic Pets Insurance",

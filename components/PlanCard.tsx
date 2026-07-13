@@ -46,10 +46,9 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.3 }}
-      className="relative bg-white transition-all duration-200 hover:shadow-[0_4px_20px_rgba(0,0,0,0.10)]"
+      className="relative bg-white transition-all duration-200 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
       style={{
-        borderRadius: 18,
-        border: isSelected ? "2px solid #0071e3" : "1px solid #e0e0e0",
+        border: isSelected ? "1.5px solid #c9a96e" : "1px solid rgba(0,0,0,0.08)",
       }}
     >
       <div className="absolute top-4 right-4">
@@ -57,8 +56,8 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
           onClick={() => toggleCompare(insurer.id)}
           className="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors active:scale-95"
           style={{
-            backgroundColor: isSelected ? "#0066cc" : "transparent",
-            borderColor: isSelected ? "#0066cc" : "#d2d2d7",
+            backgroundColor: isSelected ? "#c9a96e" : "transparent",
+            borderColor: isSelected ? "#c9a96e" : "#d2d2d7",
           }}
         >
           {isSelected && <Check className="w-3 h-3 text-white" />}
@@ -67,12 +66,14 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
 
       <div className="p-6">
         <div className="flex items-start gap-3 mb-5 pr-8">
-          <div
-            className="w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0"
-            style={{ backgroundColor: insurer.color + "15", borderRadius: 8 }}
-          >
-            {insurer.logo}
-          </div>
+          {insurer.logo && (
+            <div
+              className="w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0"
+              style={{ backgroundColor: insurer.color + "15", borderRadius: 8 }}
+            >
+              {insurer.logo}
+            </div>
+          )}
           <div>
             <h3
               className="font-semibold leading-tight"
@@ -94,7 +95,7 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
             <span className="text-[#7a7a7a] text-[17px]">/mo</span>
             {priceAdjusted && (
               <span
-                className="text-[#0066cc] font-semibold"
+                className="text-[#c9a96e] font-semibold"
                 style={{ fontSize: 11, letterSpacing: "-0.12px", marginLeft: 4 }}
               >
                 est.
@@ -187,7 +188,7 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-[14px] text-[#0066cc] mb-4 hover:text-[#0071e3] transition-colors"
+          className="flex items-center gap-1 text-[14px] text-[#c9a96e] mb-4 hover:text-[#a8875a] transition-colors"
           style={{ letterSpacing: "-0.224px" }}
         >
           {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -257,8 +258,8 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
         <div className="flex gap-2">
           <button
             onClick={handleContact}
-            className="flex-1 flex items-center justify-center gap-1.5 text-[#0066cc] text-[14px] py-2.5 hover:text-[#0071e3] transition-colors active:scale-95"
-            style={{ border: "1px solid #0066cc", borderRadius: 9999, letterSpacing: "-0.224px" }}
+            className="flex-1 flex items-center justify-center gap-1.5 text-[#c9a96e] text-[14px] py-2.5 hover:text-[#a8875a] transition-colors active:scale-95"
+            style={{ border: "1px solid #c9a96e", letterSpacing: "0.05em", textTransform: "uppercase" as const, fontSize: 11 }}
           >
             <Phone className="w-3 h-3" />
             {t.card_contact}
@@ -267,8 +268,8 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
             href={insurer.contact.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 bg-[#0066cc] text-white text-[14px] py-2.5 hover:bg-[#0071e3] transition-colors active:scale-95"
-            style={{ borderRadius: 9999, letterSpacing: "-0.224px" }}
+            className="flex-1 flex items-center justify-center gap-1.5 text-[#0c0c0d] text-[11px] py-2.5 transition-colors active:scale-95"
+            style={{ background: "#c9a96e", letterSpacing: "0.05em", textTransform: "uppercase" }}
           >
             <Globe className="w-3 h-3" />
             {t.card_getQuote}

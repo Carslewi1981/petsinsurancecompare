@@ -1,49 +1,173 @@
 @import "tailwindcss";
 
 @theme {
-  /* Apple design tokens */
-  --color-apple-blue: #0066cc;
+  /* ── Luxury Design Tokens ── */
+  --color-ink:          #0c0c0d;
+  --color-ink-soft:     #111113;
+  --color-ink-mid:      #1c1c1f;
+  --color-surface:      #16161a;
+  --color-ivory:        #faf8f4;
+  --color-warm:         #f0ede7;
+  --color-warm-mid:     #e8e3dc;
+  --color-gold:         #c9a96e;
+  --color-gold-light:   #e8d5aa;
+  --color-gold-muted:   #a8875a;
+  --color-text-primary: #1a1814;
+  --color-text-mid:     #4a4640;
+  --color-text-sub:     #6b6560;
+  --color-text-muted:   #9d9893;
+  --color-border-light: rgba(0,0,0,0.07);
+  --color-border-dark:  rgba(255,255,255,0.09);
+  --color-border-gold:  rgba(201,169,110,0.3);
+
+  /* Legacy kept for PlanCard / compare page */
+  --color-apple-blue:       #0066cc;
   --color-apple-blue-focus: #0071e3;
-  --color-apple-blue-dark: #2997ff;
-  --color-apple-ink: #1d1d1f;
-  --color-apple-ink-80: #333333;
-  --color-apple-ink-48: #7a7a7a;
-  --color-apple-canvas: #ffffff;
-  --color-apple-parchment: #f5f5f7;
-  --color-apple-pearl: #fafafc;
-  --color-apple-tile-1: #272729;
-  --color-apple-tile-2: #2a2a2c;
-  --color-apple-tile-3: #252527;
-  --color-apple-black: #000000;
-  --color-apple-hairline: #e0e0e0;
-  --color-apple-divider: #f0f0f0;
-  --color-apple-chip: #d2d2d7;
+  --color-apple-blue-dark:  #2997ff;
+  --color-apple-ink:        #1d1d1f;
+  --color-apple-ink-80:     #333333;
+  --color-apple-ink-48:     #7a7a7a;
+  --color-apple-canvas:     #ffffff;
+  --color-apple-parchment:  #f5f5f7;
+  --color-apple-pearl:      #fafafc;
+  --color-apple-tile-1:     #272729;
+  --color-apple-tile-2:     #2a2a2c;
+  --color-apple-tile-3:     #252527;
+  --color-apple-black:      #000000;
+  --color-apple-hairline:   #e0e0e0;
+  --color-apple-divider:    #f0f0f0;
+  --color-apple-chip:       #d2d2d7;
+  --color-brand-red:        #DC2626;
+  --color-brand-blue:       #0066cc;
+  --color-brand-navy:       #1E3A8A;
 
-  /* Legacy brand tokens kept for compatibility */
-  --color-brand-red: #DC2626;
-  --color-brand-blue: #0066cc;
-  --color-brand-navy: #1E3A8A;
-
-  --font-bebas: var(--font-bebas-next), sans-serif;
-  --font-inter: var(--font-inter-next), sans-serif;
+  --font-bebas:    var(--font-bebas-next), sans-serif;
+  --font-inter:    var(--font-inter-next), sans-serif;
+  --font-playfair: var(--font-playfair-next), Georgia, serif;
 }
+
+/* ── Base ── */
+html { scroll-behavior: smooth; }
 
 body {
-  background-color: #ffffff;
-  color: #1d1d1f;
+  background-color: #faf8f4;
+  color: #1a1814;
   font-family: -apple-system, "SF Pro Text", var(--font-inter), system-ui, sans-serif;
   font-size: 17px;
-  line-height: 1.47;
-  letter-spacing: -0.374px;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #f5f5f7; }
-::-webkit-scrollbar-thumb { background: #d2d2d7; }
-::-webkit-scrollbar-thumb:hover { background: #7a7a7a; }
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #faf8f4; }
+::-webkit-scrollbar-thumb { background: #c9a96e44; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #c9a96e; }
 
+/* ── Luxury noise grain overlay (CSS) ── */
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  opacity: 0.035;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Gold shimmer text ── */
+.text-gold-shimmer {
+  background: linear-gradient(120deg, #c9a96e 0%, #e8d5aa 40%, #c9a96e 60%, #a8875a 100%);
+  background-size: 250% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gold-shimmer 5s linear infinite;
+}
+
+@keyframes gold-shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 250% center; }
+}
+
+/* ── Underline link ── */
+.link-gold {
+  position: relative;
+  display: inline-block;
+  color: var(--color-gold);
+}
+.link-gold::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: -1px;
+  width: 0; height: 1px;
+  background: var(--color-gold);
+  transition: width 0.3s ease;
+}
+.link-gold:hover::after { width: 100%; }
+
+/* ── Luxury button base ── */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-gold);
+  color: #0c0c0d;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 14px 32px;
+  border-radius: 0;
+  border: 1px solid var(--color-gold);
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  cursor: pointer;
+}
+.btn-gold:hover {
+  background: var(--color-gold-light);
+}
+.btn-gold:active { transform: scale(0.98); }
+
+.btn-outline-light {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 13px 32px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 0;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-outline-light:hover {
+  border-color: rgba(255,255,255,0.6);
+  color: #fff;
+}
+
+/* ── Editorial rule ── */
+.rule-gold {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #c9a96e 50%, transparent 100%);
+}
+
+/* ── Glass panel ── */
+.glass-dark {
+  background: rgba(16,16,20,0.7);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ── Print ── */
 @media print {
   nav, footer { display: none !important; }
-  body { background: white; color: #1d1d1f; }
+  body { background: white; color: #1a1814; }
 }
