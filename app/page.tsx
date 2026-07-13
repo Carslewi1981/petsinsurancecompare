@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, type Variants } from "framer-motion";
 import { ArrowRight, ArrowUpRight, Shield, Zap, Star } from "lucide-react";
 import TrustBar from "@/components/TrustBar";
 import StatBar from "@/components/StatBar";
@@ -16,7 +16,7 @@ import { useRef } from "react";
 const topPlans = [...insurers].sort((a, b) => b.rating - a.rating).slice(0, 3);
 const providers = insurers.map((i) => ({ name: i.name, logo: i.logo, color: i.color }));
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
   show: (i: number) => ({
     opacity: 1,
