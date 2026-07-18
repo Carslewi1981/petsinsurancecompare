@@ -1,13 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Shield, Eye, Users, Zap } from "lucide-react";
 
-const team = [
-  { name: "Alex Morgan", role: "Founder & CEO", emoji: "👨‍💼" },
-  { name: "Sarah Chen", role: "Head of Insurance Research", emoji: "👩‍🔬" },
-  { name: "James Rivera", role: "Lead Engineer", emoji: "👨‍💻" },
-  { name: "Priya Patel", role: "Customer Success", emoji: "👩‍💼" },
-];
-
 const values = [
   {
     icon: Eye,
@@ -140,38 +133,6 @@ export default function AboutPage() {
                   <p className="text-[#7a7a7a]" style={{ fontSize: 17, lineHeight: 1.47, letterSpacing: "-0.374px" }}>
                     {v.description}
                   </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team — white tile */}
-      <section className="bg-white" style={{ padding: "80px 0" }}>
-        <div className="max-w-[740px] mx-auto px-4 sm:px-6">
-          <h2
-            className="font-semibold text-[#1d1d1f] mb-12 text-center"
-            style={{ fontSize: 40, lineHeight: 1.1 }}
-          >
-            The Team
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {team.map((member) => (
-              <div
-                key={member.name}
-                className="bg-[#f5f5f7] border border-[#e0e0e0] p-5 text-center"
-                style={{ borderRadius: 18 }}
-              >
-                <div className="text-4xl mb-3">{member.emoji}</div>
-                <div
-                  className="font-semibold text-[#1d1d1f]"
-                  style={{ fontSize: 14, letterSpacing: "-0.224px" }}
-                >
-                  {member.name}
-                </div>
-                <div className="text-[#7a7a7a] mt-1" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-                  {member.role}
                 </div>
               </div>
             ))}
