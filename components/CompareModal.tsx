@@ -88,11 +88,17 @@ export default function CompareModal() {
                   <tr>
                     <th className="text-left w-40 pr-4" />
                     {plans.map((plan) => (
-                      <th key={plan.id} className="text-center pb-6 px-3">
-                        <div className="font-semibold" style={{ fontSize: 17, letterSpacing: "-0.374px", color: plan.color }}>
+                      <th key={plan.id} className="text-center pb-6 px-3" style={{ borderLeft: "1px solid #e0e0e0" }}>
+                        <div
+                          className="w-14 h-14 mx-auto flex items-center justify-center text-2xl mb-2"
+                          style={{ backgroundColor: plan.color + "15", borderRadius: 8 }}
+                        >
+                          {plan.logo}
+                        </div>
+                        <div className="font-semibold text-center" style={{ fontSize: 17, letterSpacing: "-0.374px", color: plan.color }}>
                           {plan.name}
                         </div>
-                        <div className="mt-1">
+                        <div className="mt-1 flex items-center justify-center">
                           <StarRating rating={plan.rating} size="sm" />
                         </div>
                       </th>
@@ -107,7 +113,7 @@ export default function CompareModal() {
                         {row.label}
                       </td>
                       {plans.map((plan) => (
-                        <td key={plan.id} className="py-3 px-3 text-center">
+                        <td key={plan.id} className="py-3 px-3 text-center" style={{ borderLeft: "1px solid #e0e0e0" }}>
                           <span
                             className="font-semibold"
                             style={{ fontSize: row.highlight ? 17 : 14, color: row.highlight ? "#1d1d1f" : "#333333", letterSpacing: "-0.224px" }}
@@ -129,7 +135,7 @@ export default function CompareModal() {
                     <tr key={`feat-${fi}`} style={{ borderTop: "1px solid #f0f0f0" }}>
                       <td className="py-2 pr-4 text-[#7a7a7a] whitespace-nowrap" style={{ fontSize: 12 }}>Feature {fi + 1}</td>
                       {plans.map((plan) => (
-                        <td key={plan.id} className="py-2 px-3 text-center">
+                        <td key={plan.id} className="py-2 px-3 text-center" style={{ borderLeft: "1px solid #e0e0e0" }}>
                           {plan.features[fi] ? (
                             <div className="flex items-center gap-1.5 justify-center">
                               <Check className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
@@ -153,7 +159,7 @@ export default function CompareModal() {
                     <tr key={`excl-${ei}`} style={{ borderTop: "1px solid #f0f0f0" }}>
                       <td className="py-2 pr-4 text-[#7a7a7a]" style={{ fontSize: 12 }}>Exclusion {ei + 1}</td>
                       {plans.map((plan) => (
-                        <td key={plan.id} className="py-2 px-3 text-center">
+                        <td key={plan.id} className="py-2 px-3 text-center" style={{ borderLeft: "1px solid #e0e0e0" }}>
                           {plan.notCovered[ei] ? (
                             <span className="text-[#7a7a7a]" style={{ fontSize: 12 }}>{plan.notCovered[ei]}</span>
                           ) : (
@@ -169,7 +175,7 @@ export default function CompareModal() {
                   <tr style={{ borderTop: "1px solid #e0e0e0" }}>
                     <td className="pt-6" />
                     {plans.map((plan) => (
-                      <td key={plan.id} className="pt-6 px-3">
+                      <td key={plan.id} className="pt-6 px-3" style={{ borderLeft: "1px solid #e0e0e0" }}>
                         <div className="flex flex-col gap-2">
                           <button
                             onClick={() => {
