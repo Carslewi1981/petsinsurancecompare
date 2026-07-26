@@ -89,12 +89,6 @@ export default function CompareModal() {
                     <th className="text-left w-40 pr-4" />
                     {plans.map((plan) => (
                       <th key={plan.id} className="text-center pb-6 px-3">
-                        <div
-                          className="w-14 h-14 mx-auto flex items-center justify-center text-2xl mb-2"
-                          style={{ backgroundColor: plan.color + "15", borderRadius: 8 }}
-                        >
-                          {plan.logo}
-                        </div>
                         <div className="font-semibold" style={{ fontSize: 17, letterSpacing: "-0.374px", color: plan.color }}>
                           {plan.name}
                         </div>
