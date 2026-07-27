@@ -53,12 +53,14 @@ const defaultFilters: Filters = {
   sortBy: "rating",
 };
 
+const defaultPetProfile: PetProfile = { age: "adult", breed: "any", breedId: "", location: "" };
+
 const StoreContext = createContext<StoreState | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<LangCode>("en");
   const t = translations[lang];
-  const [petProfile, setPetProfile] = useState<PetProfile>({ age: "adult", breed: "any", breedId: "", location: "" });
+  const [petProfile, setPetProfile] = useState<PetProfile>(defaultPetProfile);
   const updatePetProfile = <K extends keyof PetProfile>(key: K, value: PetProfile[K]) =>
     setPetProfile((prev) => ({ ...prev, [key]: value }));
   const [selectedAnimal, setSelectedAnimal] = useState("all");
@@ -71,7 +73,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const resetFilters = () => setFilters(defaultFilters);
+  const resetFilters = () => {
+      setFilters(defaultFilters);
+      setPetProfile(defaultPetProfile);
+      setSelectedAnimal("all");
+    };
 
   const toggleCompare = (id: string) => {
     setComparedIds((prev) => {

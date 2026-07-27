@@ -191,19 +191,19 @@ export default function ComparePage() {
               </div>
             ) : (
               <motion.div
-                layout
-                className="grid grid-cols-1 xl:grid-cols-2 gap-4"
-              >
-                <AnimatePresence mode="popLayout">
-                  {filtered.map((insurer, i) => (
-                    <PlanCard
-                      key={insurer.id}
-                      insurer={insurer}
-                      animal={selectedAnimal}
-                      index={i}
-                    />
-                  ))}
-                </AnimatePresence>
+                                layout
+                                className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-h-[600px] items-start"
+                              >
+                              <AnimatePresence mode="popLayout">
+                                {filtered.map((insurer, i) => (
+                                                    <PlanCard
+                                                                            key={insurer.id}
+                                                                            insurer={insurer}
+                                                                            animal={selectedAnimal}
+                                                                            index={i}
+                                                                          />
+                                                  ))}
+                              </AnimatePresence>
               </motion.div>
             )}
           </div>
