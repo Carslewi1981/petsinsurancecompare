@@ -192,11 +192,9 @@ export default function ComparePage() {
             ) : (
               <motion.div
                 layout
-                className="grid grid-cols-1 xl:grid-cols-2 gap-4"
+        className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-h-[600px] items-start"
               >
-                <AnimatePresence mode="popLayout">
-                  {filtered.map((insurer, i) => (
-                    <PlanCard
+                  <PlanCard
                       key={insurer.id}
                       insurer={insurer}
                       animal={selectedAnimal}
