@@ -191,7 +191,6 @@ export default function ComparePage() {
               </div>
             ) : (
               <motion.div
-                                layout
                                 className="grid grid-cols-1 xl:grid-cols-2 gap-4 min-h-[600px] items-start"
                               >
                               <AnimatePresence mode="popLayout">
