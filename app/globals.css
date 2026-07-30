@@ -47,6 +47,7 @@
 }
 
 /* ── Base ── */
+* { overflow-anchor: none; }
 html { scroll-behavior: smooth; }
 
 body {
