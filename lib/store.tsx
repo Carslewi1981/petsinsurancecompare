@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Insurer } from "./insurers";
 import { LangCode, T, translations } from "./translations";
+import { TExt, translationsExt } from "./translationsExt";
 
 export interface Filters {
   maxPrice: number;
@@ -15,16 +16,17 @@ export interface Filters {
 }
 
 export interface PetProfile {
-  age: string;      // "puppy" | "young" | "adult" | "senior" | "senior+"
-  breed: string;    // size category key (for price multiplier)
-  breedId: string;  // specific breed id from breeds.ts ("" = none selected)
-  location: string; // US state abbreviation
+  age: string; // "puppy" | "young" | "adult" | "senior" | "senior+"
+breed: string; // size category key (for price multiplier)
+breedId: string; // specific breed id from breeds.ts ("" = none selected)
+location: string; // US state abbreviation
 }
 
 interface StoreState {
   lang: LangCode;
   setLang: (l: LangCode) => void;
   t: T;
+  tExt: TExt;
   petProfile: PetProfile;
   setPetProfile: (p: PetProfile) => void;
   updatePetProfile: <K extends keyof PetProfile>(key: K, value: PetProfile[K]) => void;
@@ -60,62 +62,64 @@ const StoreContext = createContext<StoreState | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [lang, setLang] = useState<LangCode>("en");
   const t = translations[lang];
+  const tExt = translationsExt[lang];
   const [petProfile, setPetProfile] = useState<PetProfile>(defaultPetProfile);
   const updatePetProfile = <K extends keyof PetProfile>(key: K, value: PetProfile[K]) =>
-    setPetProfile((prev) => ({ ...prev, [key]: value }));
+  setPetProfile((prev) => ({ ...prev, [key]: value }));
   const [selectedAnimal, setSelectedAnimal] = useState("all");
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [comparedIds, setComparedIds] = useState<string[]>([]);
   const [activeModal, setActiveModal] = useState<"compare" | "contact" | null>(null);
   const [contactInsurer, setContactInsurer] = useState<Insurer | null>(null);
-
+  
   const updateFilter = <K extends keyof Filters>(key: K, value: Filters[K]) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const resetFilters = () => {
-      setFilters(defaultFilters);
-      setPetProfile(defaultPetProfile);
-      setSelectedAnimal("all");
     };
-
+  
+  const resetFilters = () => {
+    setFilters(defaultFilters);
+  setPetProfile(defaultPetProfile);
+  setSelectedAnimal("all");
+    };
+  
   const toggleCompare = (id: string) => {
     setComparedIds((prev) => {
       if (prev.includes(id)) return prev.filter((x) => x !== id);
       if (prev.length >= 4) return prev;
       return [...prev, id];
     });
-  };
-
+    };
+  
   const clearCompared = () => setComparedIds([]);
-
+  
   return (
-    <StoreContext.Provider
-      value={{
-        lang, setLang, t,
-        petProfile, setPetProfile, updatePetProfile,
-        selectedAnimal,
-        setSelectedAnimal,
-        filters,
-        setFilters,
-        updateFilter,
-        resetFilters,
-        comparedIds,
-        toggleCompare,
-        clearCompared,
-        activeModal,
-        setActiveModal,
-        contactInsurer,
-        setContactInsurer,
-      }}
+  <StoreContext.Provider
+    value={{
+      lang, setLang, t, tExt,
+      petProfile, setPetProfile, updatePetProfile,
+      selectedAnimal,
+      setSelectedAnimal,
+      filters,
+      setFilters,
+      updateFilter,
+      resetFilters,
+      comparedIds,
+      toggleCompare,
+      clearCompared,
+      activeModal,
+      setActiveModal,
+      contactInsurer,
+      setContactInsurer,
+    }}
     >
-      {children}
-    </StoreContext.Provider>
-  );
-}
+    {children}
+  </StoreContext.Provider>
+    );
+    }
 
-export function useStore() {
-  const ctx = useContext(StoreContext);
-  if (!ctx) throw new Error("useStore must be used within StoreProvider");
-  return ctx;
-}
+    export function useStore() {
+      const ctx = useContext(StoreContext);
+    if (!ctx) throw new Error("useStore must be used within StoreProvider");
+    return ctx;
+    }
+    
