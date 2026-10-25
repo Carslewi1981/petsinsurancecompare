@@ -8,6 +8,14 @@ import { Search, RotateCcw } from "lucide-react";
 import { US_STATES, STATE_NAMES } from "@/lib/priceMultiplier";
 import { getBreedsByAnimal } from "@/lib/breeds";
 
+const budgetOptions = [
+  { value: "under25", label: "Under $25" },
+  { value: "25to50", label: "$25–$50" },
+  { value: "50to75", label: "$50–$75" },
+  { value: "75plus", label: "$75+" },
+  { value: "any", label: "Any budget" },
+];
+
 const reimbursementOptions = [
   { value: "any", label: "Any" },
   { value: "70", label: "70%+" },
@@ -272,26 +280,34 @@ export default function FilterSidebar() {
 
       <div className="w-full h-px bg-[#e0e0e0]" />
 
-      {/* Price slider */}
+      {/* Monthly budget */}
       <div className="space-y-3">
-        <div className="flex justify-between items-center">
-          <h3 className="font-semibold text-[#1d1d1f]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-            Max Monthly Price
-          </h3>
-          <span className="font-semibold text-[#0066cc]" style={{ fontSize: 14 }}>${filters.maxPrice}</span>
-        </div>
-        <input
-          type="range"
-          min={10}
-          max={200}
-          step={5}
-          value={filters.maxPrice}
-          onChange={(e) => updateFilter("maxPrice", Number(e.target.value))}
-          className="w-full cursor-pointer accent-[#0066cc]"
-        />
-        <div className="flex justify-between text-[#7a7a7a]" style={{ fontSize: 12 }}>
-          <span>$10</span>
-          <span>$200</span>
+        <h3 className="font-semibold text-[#1d1d1f]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
+          Monthly Budget
+        </h3>
+        <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Monthly budget">
+          {budgetOptions.map(({ value, label }) => {
+            const active = filters.budget === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                onClick={() => updateFilter("budget", value)}
+                className={`rounded-full border px-3 py-1.5 font-medium transition-colors ${
+                  value === "any" ? "col-span-2" : ""
+                } ${
+                  active
+                    ? "bg-[#0066cc] border-[#0066cc] text-white"
+                    : "bg-white border-[#d2d2d7] text-[#1d1d1f] hover:border-[#0066cc]"
+                }`}
+                style={{ fontSize: 12, letterSpacing: "-0.12px" }}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
