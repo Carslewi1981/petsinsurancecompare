@@ -6,7 +6,7 @@ import { LangCode, T, translations } from "./translations";
 import { TExt, translationsExt } from "./translationsExt";
 
 export interface Filters {
-  maxPrice: number;
+  budget: string; // "any" | "under25" | "25to50" | "50to75" | "75plus"
   minReimbursement: string;
   maxAnnual: string;
   deductible: string;
@@ -46,7 +46,7 @@ interface StoreState {
 }
 
 const defaultFilters: Filters = {
-  maxPrice: 200,
+  budget: "any",
   minReimbursement: "any",
   maxAnnual: "any",
   deductible: "any",
