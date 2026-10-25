@@ -24,13 +24,19 @@ jobs:
       - name: Build with Next.js
         run: npm run build
 
-      - name: Deploy to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.HOSTINGER_FTP_HOST }}
-          username: ${{ secrets.HOSTINGER_FTP_USERNAME }}
-          password: ${{ secrets.HOSTINGER_FTP_PASSWORD }}
-          local-dir: ./out/
-          server-dir: ./public_html/
-          protocol: ftps
-          security: loose
+      - name: Set up SSH key
+        env:
+          SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+          SSH_HOST: ${{ secrets.HOSTINGER_FTP_HOST }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p 65002 "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy to Hostinger via SSH (rsync)
+        env:
+          SSH_HOST: ${{ secrets.HOSTINGER_FTP_HOST }}
+          SSH_USER: ${{ secrets.HOSTINGER_FTP_USERNAME }}
+        run: |
+          rsync -avz -e "ssh -p 65002 -i ~/.ssh/id_ed25519" ./out/ "$SSH_USER@$SSH_HOST:domains/petplancompare.com/public_html/"
