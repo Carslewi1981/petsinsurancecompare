@@ -7,14 +7,31 @@ import { useStore } from "@/lib/store";
 import { insurers, ANIMAL_TYPES } from "@/lib/insurers";
 import { getBreedById } from "@/lib/breeds";
 import { scoreInsurerForBreed } from "@/lib/healthRisk";
+import { getPriceMultiplier } from "@/lib/priceMultiplier";
 import FilterSidebar from "@/components/FilterSidebar";
 import PlanCard from "@/components/PlanCard";
+
+function inBudget(price: number, budget: string) {
+  switch (budget) {
+    case "under25":
+      return price < 25;
+    case "25to50":
+      return price >= 25 && price <= 50;
+    case "50to75":
+      return price > 50 && price <= 75;
+    case "75plus":
+      return price > 75;
+    default:
+      return true;
+  }
+}
 
 function filterAndSort(
   list: typeof insurers,
   animal: string,
   filters: ReturnType<typeof useStore>["filters"],
   breedId?: string,
+  priceMultiplier = 1,
 ) {
   let result = list.filter((ins) => {
     if (animal !== "all" && !ins.animals.includes(animal)) return false;
@@ -23,7 +40,8 @@ function filterAndSort(
       animal === "all"
         ? Math.min(...Object.values(ins.monthlyPrice).filter((p) => p > 0))
         : ins.monthlyPrice[animal] || 0;
-    if (price > filters.maxPrice) return false;
+    // Match the adjusted price shown on each plan card
+    if (!inBudget(Math.round(price * priceMultiplier), filters.budget)) return false;
 
     if (filters.minReimbursement !== "any") {
       const pct = parseInt(ins.reimbursement);
@@ -99,8 +117,15 @@ export default function ComparePage() {
       : ANIMAL_TYPES.find((a) => a.id === selectedAnimal)?.label + "s" || "";
 
   const filtered = useMemo(
-    () => filterAndSort(insurers, selectedAnimal, filters, petProfile.breedId),
-    [selectedAnimal, filters, petProfile.breedId]
+    () =>
+      filterAndSort(
+        insurers,
+        selectedAnimal,
+        filters,
+        petProfile.breedId,
+        getPriceMultiplier(petProfile, selectedAnimal),
+      ),
+    [selectedAnimal, filters, petProfile]
   );
 
   return (
