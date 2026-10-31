@@ -4,13 +4,7 @@
     {
       "name": "Next.js Dev Server",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "port": 3000
-    },
-    {
-      "name": "Next.js Production Preview",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "start"],
+      "runtimeArgs": ["run", "dev", "--prefix", "pet-insurance-hub"],
       "port": 3000
     }
   ]
