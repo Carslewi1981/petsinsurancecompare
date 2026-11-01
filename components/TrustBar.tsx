@@ -2,9 +2,10 @@
 
 import { motion } from "framer-motion";
 import { LayoutList, Equal, Ban, UserX, Coins } from "lucide-react";
+import { insurers } from "@/lib/insurers";
 
 const SIGNALS = [
-  { icon: <LayoutList className="w-3.5 h-3.5" />, title: "12 providers compared" },
+  { icon: <LayoutList className="w-3.5 h-3.5" />, title: `${insurers.length} providers compared` },
   { icon: <Equal className="w-3.5 h-3.5" />, title: "1 standard format — same criteria for all" },
   { icon: <Ban className="w-3.5 h-3.5" />, title: "0 paid rankings" },
   { icon: <Coins className="w-3.5 h-3.5" />, title: "Always free to use" },

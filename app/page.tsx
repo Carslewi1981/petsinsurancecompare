@@ -169,8 +169,8 @@ export default function HomePage() {
             <div className="rule-gold mb-8" />
             <div className="grid grid-cols-4 gap-8">
               {[
-                { value: "12+", label: t.stat_providers },
-                { value: "7", label: t.stat_animalTypes },
+                { value: String(insurers.length), label: t.stat_providers },
+                { value: "6", label: t.stat_animalTypes },
                 { value: "50K+", label: t.stat_comparisons },
                 { value: "Free", label: t.stat_free },
               ].map((s) => (
