@@ -9,30 +9,43 @@ interface StarRatingProps {
   theme?: "dark" | "light";
 }
 
-export default function StarRating({ rating, reviews, size = "md", theme = "dark" }: StarRatingProps) {
-  const stars = Array.from({ length: 5 }, (_, i) => {
-    const filled = i + 1 <= Math.floor(rating);
-    const partial = !filled && i < rating;
-    return { filled, partial };
-  });
-
-  const sz = size === "sm" ? "w-3 h-3" : "w-4 h-4";
+export default function StarRating({ rating, reviews, size = "md", theme = "light" }: StarRatingProps) {
+  const dark = theme === "dark";
+  const px = size === "sm" ? 14 : 18;
 
   return (
-    <div className="flex items-center gap-1">
-      <div className="flex gap-0.5">
-        {stars.map((s, i) => (
-          <Star
-            key={i}
-            className={`${sz} ${s.filled ? "fill-yellow-400 text-yellow-400" : s.partial ? "fill-yellow-400/50 text-yellow-400" : "text-gray-600"}`}
-          />
-        ))}
+    <div className="flex items-center gap-2" role="img" aria-label={`${rating.toFixed(1)} out of 5 stars`}>
+      <div className="flex gap-0.5" aria-hidden>
+        {Array.from({ length: 5 }, (_, i) => {
+          const fill = Math.max(0, Math.min(1, rating - i));
+          return (
+            <span key={i} className="relative inline-block" style={{ width: px, height: px }}>
+              <Star
+                width={px}
+                height={px}
+                strokeWidth={1.6}
+                style={{ color: dark ? "rgba(255,255,255,0.45)" : "rgba(15,37,36,0.35)", position: "absolute", inset: 0 }}
+              />
+              {fill > 0 && (
+                <span className="absolute inset-0 overflow-hidden" style={{ width: `${fill * 100}%` }}>
+                  <Star
+                    width={px}
+                    height={px}
+                    strokeWidth={1.6}
+                    fill="#ffd23f"
+                    style={{ color: dark ? "#ffd23f" : "#0f2524" }}
+                  />
+                </span>
+              )}
+            </span>
+          );
+        })}
       </div>
-      <span className={`font-semibold ${theme === "dark" ? "text-white" : "text-[#1d1d1f]"} ${size === "sm" ? "text-xs" : "text-sm"}`}>
+      <span style={{ fontWeight: 700, fontSize: size === "sm" ? 15 : 17, color: dark ? "#fff" : "var(--color-ink)" }}>
         {rating.toFixed(1)}
       </span>
       {reviews !== undefined && (
-        <span className={`${theme === "dark" ? "text-gray-400" : "text-[#7a7a7a]"} ${size === "sm" ? "text-xs" : "text-sm"}`}>
+        <span style={{ fontSize: size === "sm" ? 14 : 15, color: dark ? "rgba(255,255,255,0.75)" : "var(--color-muted)" }}>
           ({reviews.toLocaleString()})
         </span>
       )}

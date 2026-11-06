@@ -2,29 +2,19 @@
 
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, CheckCircle2, Quote } from "lucide-react";
+import { ChevronLeft, ChevronRight, BadgeCheck, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { REVIEWS, AGGREGATE, Review } from "@/lib/reviews";
 import StarRating from "./StarRating";
-import { ArrowRight } from "lucide-react";
 
 function RatingBar({ pct, label }: { pct: number; label: string }) {
   return (
-    <div className="flex items-center gap-3">
-      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", width: 20, textAlign: "right", flexShrink: 0 }}>
-        {label}
-      </span>
-      <div className="flex-1 h-px overflow-hidden" style={{ background: "rgba(255,255,255,0.08)" }}>
-        <motion.div
-          className="h-full"
-          style={{ background: "#c9a96e" }}
-          initial={{ width: 0 }}
-          whileInView={{ width: `${pct}%` }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        />
+    <div className="flex items-center gap-3" style={{ fontSize: 14 }}>
+      <span style={{ width: 28, textAlign: "right", flexShrink: 0 }}>{label}</span>
+      <div className="flex-1 h-2.5 rounded-full overflow-hidden" style={{ background: "var(--color-mint)" }}>
+        <div className="h-full rounded-full" style={{ width: `${pct}%`, background: "var(--color-scrub)" }} />
       </div>
-      <span style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", width: 28, flexShrink: 0 }}>{pct}%</span>
+      <span style={{ width: 36, flexShrink: 0, color: "var(--color-muted)" }}>{pct}%</span>
     </div>
   );
 }
@@ -36,70 +26,61 @@ function ReviewCard({ review, featured }: { review: Review; featured?: boolean }
   const displayBody = !isLong || expanded ? review.body : review.body.slice(0, BODY_LIMIT) + "…";
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className="flex flex-col gap-4 p-6 h-full"
+    <article
+      className="flex flex-col gap-3.5 p-6 h-full"
       style={{
-        background: featured ? "rgba(201,169,110,0.04)" : "rgba(255,255,255,0.02)",
-        border: featured ? "1px solid rgba(201,169,110,0.2)" : "1px solid rgba(255,255,255,0.06)",
+        background: featured ? "var(--color-tag-soft)" : "var(--color-paper)",
+        border: "2px solid var(--color-ink)",
+        borderRadius: 14,
       }}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5" style={{ fontSize: 10, fontWeight: 600, color: "#c9a96e", letterSpacing: "0.06em" }}>
-          <CheckCircle2 className="w-3 h-3" />
-          Verified Owner
-        </div>
-        <Quote className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.1)" }} />
+      <div className="flex items-center justify-between gap-2">
+        <StarRating rating={review.rating} size="sm" />
+        <span className="flex items-center gap-1.5" style={{ fontSize: 14, fontWeight: 600, color: "var(--color-teal)" }}>
+          <BadgeCheck className="w-4 h-4" aria-hidden />
+          Verified owner
+        </span>
       </div>
 
-      <StarRating rating={review.rating} size="sm" theme="dark" />
-
-      <h3 style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.85)", lineHeight: 1.4, letterSpacing: "-0.01em" }}>
+      <h3 className="heading" style={{ fontSize: 24 }}>
         {review.title}
       </h3>
 
       <div>
-        <p style={{ fontSize: 12, lineHeight: 1.75, color: "rgba(255,255,255,0.4)" }}>
-          {displayBody}
-        </p>
+        <p style={{ fontSize: 16, lineHeight: 1.6 }}>{displayBody}</p>
         {isLong && (
-          <button
-            onClick={() => setExpanded((e) => !e)}
-            style={{ fontSize: 11, color: "#c9a96e", marginTop: 4 }}
-          >
+          <button onClick={() => setExpanded((e) => !e)} aria-expanded={expanded} className="link-u mt-1" style={{ fontSize: 15 }}>
             {expanded ? "Show less" : "Read more"}
           </button>
         )}
       </div>
 
       {review.claimAmount && (
-        <div
-          className="self-start px-3 py-1 font-semibold"
-          style={{ fontSize: 11, color: "#c9a96e", background: "rgba(201,169,110,0.08)", border: "1px solid rgba(201,169,110,0.2)" }}
-        >
+        <p className="self-start px-3 py-1 rounded-full" style={{ fontSize: 14, fontWeight: 700, background: "var(--color-tag)", border: "2px solid var(--color-ink)" }}>
           {review.claimAmount}
-        </div>
+        </p>
       )}
 
-      <div className="mt-auto pt-4 flex items-center justify-between" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+      <div className="mt-auto pt-4 flex items-center justify-between gap-3" style={{ borderTop: "2px dashed var(--color-line)" }}>
         <div className="flex items-center gap-2.5">
-          <span style={{ fontSize: 20 }}>{review.avatar}</span>
+          <span aria-hidden style={{ fontSize: 24 }}>
+            {review.avatar}
+          </span>
           <div>
-            <div style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.6)" }}>{review.author}</div>
-            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.25)" }}>
-              {review.petEmoji} {review.petName} · {review.petBreed}
+            <div style={{ fontSize: 15, fontWeight: 700 }}>{review.author}</div>
+            <div style={{ fontSize: 14, color: "var(--color-muted)" }}>
+              {review.petEmoji} {review.petName}, {review.petBreed}
             </div>
           </div>
         </div>
         <div className="text-right">
-          <div style={{ fontSize: 10, fontWeight: 600, color: "#c9a96e", opacity: 0.8 }}>{review.insurerFound}</div>
-          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.2)" }}>{review.location} · {review.date}</div>
+          <div style={{ fontSize: 14, fontWeight: 700 }}>{review.insurerFound}</div>
+          <div style={{ fontSize: 14, color: "var(--color-muted)" }}>
+            {review.location}, {review.date}
+          </div>
         </div>
       </div>
-    </motion.div>
+    </article>
   );
 }
 
@@ -109,7 +90,7 @@ const PAGE_SIZE = 6;
 
 export default function ReviewsSection() {
   const [page, setPage] = useState(0);
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const totalPages = Math.ceil(REST.length / PAGE_SIZE);
   const pageReviews = REST.slice(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE);
@@ -120,81 +101,46 @@ export default function ReviewsSection() {
   };
 
   return (
-    <section style={{ background: "#0e0d0c", padding: "120px 0" }} ref={sectionRef}>
-      <div className="max-w-[1200px] mx-auto px-6">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row gap-16 mb-16 items-start">
-          <div className="flex-1">
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              style={{ fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "#c9a96e", fontWeight: 500, marginBottom: 16 }}
-            >
-              Community Reviews
-            </motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-[var(--font-playfair-next)] text-white"
-              style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 500, lineHeight: 1.2, letterSpacing: "-0.025em", marginBottom: 16 }}
-            >
-              Real pet owners.<br />
-              <span className="italic" style={{ color: "rgba(255,255,255,0.5)" }}>Real stories.</span>
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              style={{ fontSize: 14, lineHeight: 1.75, color: "rgba(255,255,255,0.35)", maxWidth: 360 }}
-            >
+    <section style={{ background: "var(--color-mint)", padding: "clamp(64px, 9vw, 120px) 0" }} ref={sectionRef}>
+      <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
+        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 mb-12 lg:items-end lg:justify-between">
+          <div>
+            <h2 className="display" style={{ fontSize: "clamp(40px, 5.5vw, 76px)" }}>
+              Real pet owners. Real stories.
+            </h2>
+            <p className="mt-4 prose-measure" style={{ fontSize: 19, color: "var(--color-muted)", maxWidth: "44ch" }}>
               Every review is from a verified pet owner who used this site to find their plan.
-            </motion.p>
+            </p>
           </div>
 
-          {/* Aggregate score */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="flex-shrink-0 p-8"
-            style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.07)", minWidth: 240 }}
+          <div
+            className="flex-shrink-0 p-6 w-full lg:w-[320px]"
+            style={{ background: "var(--color-paper)", border: "2px solid var(--color-ink)", borderRadius: 14 }}
           >
             <div className="flex items-baseline gap-2 mb-2">
-              <span
-                className="font-[var(--font-bebas-next)] text-white"
-                style={{ fontSize: 64, lineHeight: 1, letterSpacing: "-0.02em" }}
-              >
+              <span className="display" style={{ fontSize: 72 }}>
                 {AGGREGATE.avgRating}
               </span>
-              <span style={{ fontSize: 16, color: "rgba(255,255,255,0.25)" }}>/5</span>
+              <span style={{ fontSize: 18, color: "var(--color-muted)" }}>out of 5</span>
             </div>
-            <StarRating rating={AGGREGATE.avgRating} size="md" theme="dark" />
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 8, marginBottom: 20, letterSpacing: "0.03em" }}>
+            <StarRating rating={AGGREGATE.avgRating} size="md" />
+            <p className="mt-2 mb-4" style={{ fontSize: 15, color: "var(--color-muted)" }}>
               {AGGREGATE.totalReviews.toLocaleString()} verified reviews
             </p>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-2.5">
               <RatingBar pct={AGGREGATE.fiveStarPct} label="5★" />
               <RatingBar pct={AGGREGATE.fourStarPct} label="4★" />
               <RatingBar pct={AGGREGATE.threeStarPct} label="3★" />
             </div>
-          </motion.div>
+          </div>
         </div>
 
-        <div className="rule-gold mb-16" />
-
-        {/* Featured reviews */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
           {FEATURED.map((r) => (
             <ReviewCard key={r.id} review={r} featured />
           ))}
         </div>
 
-        {/* Paginated reviews */}
         <AnimatePresence mode="wait">
           <motion.div
             key={page}
@@ -202,7 +148,7 @@ export default function ReviewsSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-8"
           >
             {pageReviews.map((r) => (
               <ReviewCard key={r.id} review={r} />
@@ -210,45 +156,25 @@ export default function ReviewsSection() {
           </motion.div>
         </AnimatePresence>
 
-        {/* Pagination */}
         <div className="flex items-center justify-between">
-          <button
-            onClick={() => changePage(-1)}
-            disabled={page === 0}
-            className="flex items-center gap-2 transition-all disabled:opacity-20"
-            style={{
-              fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase",
-              color: "rgba(255,255,255,0.5)", padding: "10px 20px",
-              border: "1px solid rgba(255,255,255,0.1)", background: "transparent",
-            }}
-          >
-            <ChevronLeft className="w-3.5 h-3.5" /> Prev
+          <button onClick={() => changePage(-1)} disabled={page === 0} className="btn btn-quiet btn-sm disabled:opacity-40">
+            <ChevronLeft className="w-4 h-4" /> Previous
           </button>
-          <span style={{ fontSize: 11, color: "rgba(255,255,255,0.2)", letterSpacing: "0.08em" }}>
-            {page + 1} / {totalPages}
+          <span style={{ fontSize: 15 }}>
+            Page {page + 1} of {totalPages}
           </span>
-          <button
-            onClick={() => changePage(1)}
-            disabled={page === totalPages - 1}
-            className="flex items-center gap-2 transition-all disabled:opacity-20"
-            style={{
-              fontSize: 11, letterSpacing: "0.06em", textTransform: "uppercase",
-              color: "rgba(255,255,255,0.5)", padding: "10px 20px",
-              border: "1px solid rgba(255,255,255,0.1)", background: "transparent",
-            }}
-          >
-            Next <ChevronRight className="w-3.5 h-3.5" />
+          <button onClick={() => changePage(1)} disabled={page === totalPages - 1} className="btn btn-quiet btn-sm disabled:opacity-40">
+            Next <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Bottom CTA */}
-        <div className="mt-16 text-center">
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.25)", marginBottom: 20 }}>
+        <div className="mt-14 text-center">
+          <p style={{ fontSize: 18, marginBottom: 18 }}>
             Join {AGGREGATE.totalReviews.toLocaleString()}+ pet owners who found the right plan.
           </p>
-          <Link href="/compare" className="btn-gold" style={{ fontSize: 11 }}>
-            Start Comparing — It&rsquo;s Free
-            <ArrowRight className="w-3.5 h-3.5" />
+          <Link href="/compare" className="btn">
+            Start comparing, it&rsquo;s free
+            <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

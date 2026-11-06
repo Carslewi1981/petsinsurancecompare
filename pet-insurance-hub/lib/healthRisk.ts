@@ -154,10 +154,10 @@ export function scoreInsurerForBreed(insurer: Insurer, breed: Breed): BreedMatch
 
 export function getRiskLevelColor(level: string): string {
   switch (level) {
-    case "low":       return "#16a34a";
-    case "moderate":  return "#d97706";
-    case "high":      return "#dc2626";
-    case "very-high": return "#7c3aed";
+    case "low":       return "#17703f";
+    case "moderate":  return "#a85a00";
+    case "high":      return "#c4301f";
+    case "very-high": return "#6b2fa0";
     default:          return "#6b7280";
   }
 }
@@ -174,11 +174,11 @@ export function getRiskLevelLabel(level: string): string {
 
 export function getGradeColor(grade: string): string {
   switch (grade) {
-    case "A": return "#16a34a";
-    case "B": return "#0066cc";
-    case "C": return "#d97706";
-    case "D": return "#dc2626";
-    case "F": return "#7c3aed";
+    case "A": return "#17703f";
+    case "B": return "#146c6a";
+    case "C": return "#a85a00";
+    case "D": return "#c4301f";
+    case "F": return "#6b2fa0";
     default:  return "#6b7280";
   }
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useStore } from "@/lib/store";
 import AnimalSelector from "./AnimalSelector";
 import BreedRiskCard from "./BreedRiskCard";
-import { Search, RotateCcw } from "lucide-react";
+import { Search, RotateCcw, X } from "lucide-react";
 import { US_STATES, STATE_NAMES } from "@/lib/priceMultiplier";
 import { getBreedsByAnimal } from "@/lib/breeds";
 
@@ -46,51 +46,69 @@ const waitingOptions = [
 ];
 
 const sortOptions = [
-  { value: "rating", label: "Top Rated" },
-  { value: "price", label: "Lowest Price" },
-  { value: "reviews", label: "Most Reviews" },
-  { value: "claims", label: "Fastest Claims" },
-  { value: "breedMatch", label: "Best Breed Match" },
+  { value: "rating", label: "Top rated" },
+  { value: "price", label: "Lowest price" },
+  { value: "reviews", label: "Most reviews" },
+  { value: "claims", label: "Fastest claims" },
+  { value: "breedMatch", label: "Best breed match" },
 ];
 
 const ageOptions = [
-  { value: "puppy",    label: "Puppy / Kitten (0–1 yr)" },
-  { value: "young",   label: "Young (1–3 yrs)" },
-  { value: "adult",   label: "Adult (3–7 yrs)" },
-  { value: "senior",  label: "Senior (7–10 yrs)" },
+  { value: "puppy", label: "Puppy / Kitten (0–1 yr)" },
+  { value: "young", label: "Young (1–3 yrs)" },
+  { value: "adult", label: "Adult (3–7 yrs)" },
+  { value: "senior", label: "Senior (7–10 yrs)" },
   { value: "senior+", label: "Senior+ (10+ yrs)" },
 ];
 
 const dogBreedOptions = [
-  { value: "any",    label: "Any / Unknown" },
-  { value: "small",  label: "Small (under 20 lbs)" },
+  { value: "any", label: "Any / Unknown" },
+  { value: "small", label: "Small (under 20 lbs)" },
   { value: "medium", label: "Medium (20–50 lbs)" },
-  { value: "large",  label: "Large (50–90 lbs)" },
-  { value: "giant",  label: "Giant (90+ lbs)" },
+  { value: "large", label: "Large (50–90 lbs)" },
+  { value: "giant", label: "Giant (90+ lbs)" },
 ];
 
 const catBreedOptions = [
-  { value: "any",       label: "Any / Unknown" },
-  { value: "domestic",  label: "Domestic (mixed)" },
-  { value: "purebred",  label: "Purebred" },
+  { value: "any", label: "Any / Unknown" },
+  { value: "domestic", label: "Domestic (mixed)" },
+  { value: "purebred", label: "Purebred" },
 ];
 
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: (id: string) => React.ReactNode;
+}) {
+  const id = useId();
+  return (
+    <div>
+      <label htmlFor={id} className="field-label">
+        {label}
+        {hint && <span style={{ fontWeight: 500, color: "var(--color-muted)" }}> {hint}</span>}
+      </label>
+      {children(id)}
+    </div>
+  );
+}
+
 function Select({
+  id,
   value,
   onChange,
   options,
 }: {
+  id?: string;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
 }) {
   return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full bg-white border border-[#e0e0e0] text-[#1d1d1f] px-3 py-2 focus:outline-none focus:border-[#0066cc] appearance-none cursor-pointer"
-      style={{ fontSize: 14, letterSpacing: "-0.224px", borderRadius: 8 }}
-    >
+    <select id={id} value={value} onChange={(e) => onChange(e.target.value)} className="field">
       {options.map((o) => (
         <option key={o.value} value={o.value}>
           {o.label}
@@ -100,72 +118,103 @@ function Select({
   );
 }
 
-function BreedSearch({ animal, value, onChange }: {
+function BreedSearch({
+  id,
+  animal,
+  value,
+  onChange,
+}: {
+  id: string;
   animal: "dog" | "cat";
   value: string;
   onChange: (id: string) => void;
 }) {
   const [query, setQuery] = useState("");
   const breeds = getBreedsByAnimal(animal);
-  const filtered = query.length > 0
-    ? breeds.filter((b) => b.name.toLowerCase().includes(query.toLowerCase()))
-    : breeds;
+  const filtered =
+    query.length > 0 ? breeds.filter((b) => b.name.toLowerCase().includes(query.toLowerCase())) : breeds;
   const selected = breeds.find((b) => b.id === value);
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#d2d2d7]" />
+        <Search
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+          style={{ color: "var(--color-muted)" }}
+          aria-hidden
+        />
         <input
+          id={id}
           type="text"
-          placeholder={`Search ${animal} breeds...`}
+          placeholder={`Search ${animal} breeds`}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-white border border-[#e0e0e0] text-[#1d1d1f] pl-8 pr-3 py-2 focus:outline-none focus:border-[#0066cc] placeholder-[#d2d2d7]"
-          style={{ fontSize: 13, letterSpacing: "-0.12px", borderRadius: 8 }}
+          className="field"
+          style={{ paddingLeft: 36 }}
         />
       </div>
 
-      {/* Current selection */}
       {selected && (
         <div
-          className="flex items-center justify-between px-3 py-1.5"
-          style={{ background: "#eff6ff", borderRadius: 7 }}
+          className="flex items-center justify-between px-3 py-1.5 rounded-lg"
+          style={{ background: "var(--color-tag-soft)", border: "2px solid var(--color-ink)" }}
         >
-          <span className="text-[#0066cc] font-semibold" style={{ fontSize: 12 }}>{selected.name}</span>
+          <span style={{ fontSize: 15, fontWeight: 700 }}>{selected.name}</span>
           <button
-            onClick={() => { onChange(""); setQuery(""); }}
-            className="text-[#7a7a7a] hover:text-[#1d1d1f]"
-            style={{ fontSize: 11 }}
+            onClick={() => {
+              onChange("");
+              setQuery("");
+            }}
+            aria-label={`Clear ${selected.name}`}
+            className="p-1 rounded-full hover:bg-black/10"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
-      {/* Dropdown list */}
       {query.length > 0 && (
         <div
-          className="bg-white border border-[#e0e0e0] overflow-y-auto"
-          style={{ borderRadius: 8, maxHeight: 180 }}
+          className="bg-paper overflow-y-auto"
+          style={{ borderRadius: 10, maxHeight: 200, border: "2px solid var(--color-ink)" }}
         >
           {filtered.length === 0 ? (
-            <div className="px-3 py-2 text-[#7a7a7a]" style={{ fontSize: 12 }}>No breeds found</div>
+            <p className="px-3 py-2" style={{ fontSize: 14, color: "var(--color-muted)" }}>
+              No breeds found
+            </p>
           ) : (
             filtered.map((b) => (
               <button
                 key={b.id}
-                onClick={() => { onChange(b.id); setQuery(""); }}
-                className="w-full text-left px-3 py-2 hover:bg-[#f5f5f7] transition-colors flex items-center justify-between"
-                style={{ fontSize: 13 }}
+                onClick={() => {
+                  onChange(b.id);
+                  setQuery("");
+                }}
+                className="w-full text-left px-3 py-2 hover:bg-mint-soft flex items-center justify-between gap-2"
+                style={{ fontSize: 15 }}
               >
                 <span>{b.name}</span>
                 <span
-                  className="text-[10px] px-1.5 py-0.5 font-semibold"
+                  className="px-2 py-0.5 rounded-full"
                   style={{
-                    borderRadius: 9999,
-                    color: b.riskLevel === "low" ? "#16a34a" : b.riskLevel === "moderate" ? "#d97706" : b.riskLevel === "high" ? "#dc2626" : "#7c3aed",
-                    background: b.riskLevel === "low" ? "#f0fdf4" : b.riskLevel === "moderate" ? "#fffbeb" : b.riskLevel === "high" ? "#fef2f2" : "#f5f3ff",
+                    fontSize: 12,
+                    fontWeight: 700,
+                    color:
+                      b.riskLevel === "low"
+                        ? "#0f5a31"
+                        : b.riskLevel === "moderate"
+                        ? "#6b3a00"
+                        : b.riskLevel === "high"
+                        ? "#8f2315"
+                        : "#4b1f78",
+                    background:
+                      b.riskLevel === "low"
+                        ? "#e3f2ea"
+                        : b.riskLevel === "moderate"
+                        ? "#fff1b8"
+                        : b.riskLevel === "high"
+                        ? "#fbe3df"
+                        : "#efe6f7",
                   }}
                 >
                   {b.riskLevel}
@@ -179,112 +228,99 @@ function BreedSearch({ animal, value, onChange }: {
   );
 }
 
+function Divider() {
+  return <div className="w-full" style={{ borderTop: "2px dashed var(--color-line)" }} />;
+}
+
 export default function FilterSidebar() {
   const {
-    filters, updateFilter, resetFilters,
-    comparedIds, setActiveModal,
-    petProfile, updatePetProfile,
+    filters,
+    updateFilter,
+    resetFilters,
+    comparedIds,
+    setActiveModal,
+    petProfile,
+    updatePetProfile,
     selectedAnimal,
   } = useStore();
 
   const breedOptions =
-    selectedAnimal === "dog" ? dogBreedOptions :
-    selectedAnimal === "cat" ? catBreedOptions : null;
+    selectedAnimal === "dog" ? dogBreedOptions : selectedAnimal === "cat" ? catBreedOptions : null;
 
   const showBreedSearch = selectedAnimal === "dog" || selectedAnimal === "cat";
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <AnimalSelector />
 
-      <div className="w-full h-px bg-[#e0e0e0]" />
+      <Divider />
 
-      {/* Pet Profile */}
-      <div className="space-y-3">
-        <h3 className="font-semibold text-[#1d1d1f]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-          Your Pet
+      <div className="space-y-4">
+        <h3 className="heading" style={{ fontSize: 20 }}>
+          Your pet
         </h3>
 
-        {/* Age */}
-        <div className="space-y-1">
-          <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>Age</label>
-          <Select
-            value={petProfile.age}
-            onChange={(v) => updatePetProfile("age", v)}
-            options={ageOptions}
-          />
-        </div>
+        <Field label="Age">
+          {(id) => <Select id={id} value={petProfile.age} onChange={(v) => updatePetProfile("age", v)} options={ageOptions} />}
+        </Field>
 
-        {/* Specific breed search */}
         {showBreedSearch && (
-          <div className="space-y-1">
-            <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-              Specific Breed
-              <span
-                className="ml-1.5 text-[#0066cc] font-semibold"
-                style={{ fontSize: 10, letterSpacing: 0 }}
-              >
-                NEW — Health Risk Analysis
-              </span>
-            </label>
-            <BreedSearch
-              animal={selectedAnimal as "dog" | "cat"}
-              value={petProfile.breedId}
-              onChange={(id) => updatePetProfile("breedId", id)}
-            />
-          </div>
+          <Field label="Specific breed" hint="(adds a health risk analysis)">
+            {(id) => (
+              <BreedSearch
+                id={id}
+                animal={selectedAnimal as "dog" | "cat"}
+                value={petProfile.breedId}
+                onChange={(b) => updatePetProfile("breedId", b)}
+              />
+            )}
+          </Field>
         )}
 
-        {/* Size/breed category for price multiplier */}
         {breedOptions && (
-          <div className="space-y-1">
-            <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-              {selectedAnimal === "dog" ? "Size Category" : "Breed Type"}
-            </label>
-            <Select
-              value={petProfile.breed}
-              onChange={(v) => updatePetProfile("breed", v)}
-              options={breedOptions}
-            />
-          </div>
+          <Field label={selectedAnimal === "dog" ? "Size category" : "Breed type"}>
+            {(id) => (
+              <Select id={id} value={petProfile.breed} onChange={(v) => updatePetProfile("breed", v)} options={breedOptions} />
+            )}
+          </Field>
         )}
 
-        {/* Location */}
-        <div className="space-y-1">
-          <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>State / Location</label>
-          <select
-            value={petProfile.location}
-            onChange={(e) => updatePetProfile("location", e.target.value)}
-            className="w-full bg-white border border-[#e0e0e0] text-[#1d1d1f] px-3 py-2 focus:outline-none focus:border-[#0066cc] appearance-none cursor-pointer"
-            style={{ fontSize: 14, letterSpacing: "-0.224px", borderRadius: 8 }}
-          >
-            <option value="">Any / Not sure</option>
-            {US_STATES.map((s) => (
-              <option key={s} value={s}>{STATE_NAMES[s]} ({s})</option>
-            ))}
-          </select>
-        </div>
+        <Field label="State">
+          {(id) => (
+            <select
+              id={id}
+              value={petProfile.location}
+              onChange={(e) => updatePetProfile("location", e.target.value)}
+              className="field"
+            >
+              <option value="">Any / Not sure</option>
+              {US_STATES.map((s) => (
+                <option key={s} value={s}>
+                  {STATE_NAMES[s]} ({s})
+                </option>
+              ))}
+            </select>
+          )}
+        </Field>
 
-        {/* Price impact note */}
         {(petProfile.age !== "adult" || petProfile.breed !== "any" || petProfile.location) && (
-          <p className="text-[#0066cc]" style={{ fontSize: 11, letterSpacing: "-0.12px" }}>
-            ✦ Prices adjusted for your pet profile
+          <p
+            className="px-3 py-2 rounded-lg"
+            style={{ fontSize: 14, background: "var(--color-tag-soft)", lineHeight: 1.4 }}
+          >
+            Prices are adjusted for your pet profile.
           </p>
         )}
 
-        {/* Breed risk card */}
-        {petProfile.breedId && (
-          <BreedRiskCard breedId={petProfile.breedId} />
-        )}
+        {petProfile.breedId && <BreedRiskCard breedId={petProfile.breedId} />}
       </div>
 
-      <div className="w-full h-px bg-[#e0e0e0]" />
+      <Divider />
 
-      {/* Monthly budget */}
-      <div className="space-y-3">
-        <h3 className="font-semibold text-[#1d1d1f]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-          Monthly Budget
-        </h3>
+      <fieldset className="space-y-2.5">
+        <legend className="heading mb-2" style={{ fontSize: 20 }}>
+          Monthly budget
+        </legend>
         <div className="grid grid-cols-2 gap-2" role="radiogroup" aria-label="Monthly budget">
           {budgetOptions.map(({ value, label }) => {
             const active = filters.budget === value;
@@ -295,81 +331,75 @@ export default function FilterSidebar() {
                 role="radio"
                 aria-checked={active}
                 onClick={() => updateFilter("budget", value)}
-                className={`rounded-full border px-3 py-1.5 font-medium transition-colors ${
-                  value === "any" ? "col-span-2" : ""
-                } ${
-                  active
-                    ? "bg-[#0066cc] border-[#0066cc] text-white"
-                    : "bg-white border-[#d2d2d7] text-[#1d1d1f] hover:border-[#0066cc]"
-                }`}
-                style={{ fontSize: 12, letterSpacing: "-0.12px" }}
+                className={`rounded-full px-3 py-2 transition-colors ${value === "any" ? "col-span-2" : ""}`}
+                style={{
+                  fontSize: 15,
+                  fontWeight: active ? 700 : 500,
+                  background: active ? "var(--color-tag)" : "var(--color-paper)",
+                  border: "2px solid var(--color-ink)",
+                  boxShadow: active ? "2px 2px 0 var(--color-ink)" : "none",
+                }}
               >
                 {label}
               </button>
             );
           })}
         </div>
-      </div>
+      </fieldset>
 
-      {/* Filter selects */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         {[
           { label: "Reimbursement", key: "minReimbursement" as const, options: reimbursementOptions },
-          { label: "Annual Max", key: "maxAnnual" as const, options: annualMaxOptions },
+          { label: "Annual maximum", key: "maxAnnual" as const, options: annualMaxOptions },
           { label: "Deductible", key: "deductible" as const, options: deductibleOptions },
-          { label: "Waiting Period", key: "waitingPeriod" as const, options: waitingOptions },
+          { label: "Waiting period", key: "waitingPeriod" as const, options: waitingOptions },
         ].map(({ label, key, options }) => (
-          <div key={key} className="space-y-1">
-            <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>{label}</label>
-            <Select value={filters[key]} onChange={(v) => updateFilter(key, v)} options={options} />
-          </div>
+          <Field key={key} label={label}>
+            {(id) => <Select id={id} value={filters[key]} onChange={(v) => updateFilter(key, v)} options={options} />}
+          </Field>
         ))}
       </div>
 
-      {/* Search */}
-      <div className="space-y-1">
-        <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>Search Provider</label>
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#d2d2d7]" />
-          <input
-            type="text"
-            placeholder="Provider name..."
-            value={filters.searchTerm}
-            onChange={(e) => updateFilter("searchTerm", e.target.value)}
-            className="w-full bg-white border border-[#e0e0e0] text-[#1d1d1f] pl-9 pr-3 py-2 focus:outline-none focus:border-[#0066cc] placeholder-[#d2d2d7]"
-            style={{ fontSize: 14, letterSpacing: "-0.224px", borderRadius: 9999 }}
-          />
-        </div>
-      </div>
+      <Field label="Search provider">
+        {(id) => (
+          <div className="relative">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+              style={{ color: "var(--color-muted)" }}
+              aria-hidden
+            />
+            <input
+              id={id}
+              type="text"
+              placeholder="Provider name"
+              value={filters.searchTerm}
+              onChange={(e) => updateFilter("searchTerm", e.target.value)}
+              className="field"
+              style={{ paddingLeft: 36 }}
+            />
+          </div>
+        )}
+      </Field>
 
-      {/* Sort */}
-      <div className="space-y-1">
-        <label className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>Sort By</label>
-        <Select value={filters.sortBy} onChange={(v) => updateFilter("sortBy", v)} options={sortOptions} />
-      </div>
+      <Field label="Sort by">
+        {(id) => <Select id={id} value={filters.sortBy} onChange={(v) => updateFilter("sortBy", v)} options={sortOptions} />}
+      </Field>
 
-      {/* Reset */}
-      <button
-        onClick={resetFilters}
-        className="flex items-center gap-2 text-[#0066cc] hover:text-[#0071e3] transition-colors"
-        style={{ fontSize: 14, letterSpacing: "-0.224px" }}
-      >
-        <RotateCcw className="w-3.5 h-3.5" />
-        Reset Filters
+      <button onClick={resetFilters} className="flex items-center gap-2 link-u self-start" style={{ fontSize: 15 }}>
+        <RotateCcw className="w-4 h-4" />
+        Reset filters
       </button>
 
-      {/* Compare bar */}
       {comparedIds.length >= 2 && (
-        <div className="border border-[#0066cc] bg-[#f0f6ff] p-4 space-y-3" style={{ borderRadius: 11 }}>
-          <div className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-            <span className="font-semibold text-[#1d1d1f]">{comparedIds.length}</span> of 4 selected
-          </div>
-          <button
-            onClick={() => setActiveModal("compare")}
-            className="w-full bg-[#0066cc] text-white py-2.5 hover:bg-[#0071e3] transition-colors active:scale-95"
-            style={{ fontSize: 14, letterSpacing: "-0.224px", borderRadius: 9999 }}
-          >
-            Compare Selected
+        <div
+          className="p-4 space-y-3 sticky bottom-3"
+          style={{ background: "var(--color-tag)", border: "2px solid var(--color-ink)", borderRadius: 12, boxShadow: "3px 3px 0 var(--color-ink)" }}
+        >
+          <p style={{ fontSize: 15 }}>
+            <strong>{comparedIds.length}</strong> of 4 selected
+          </p>
+          <button onClick={() => setActiveModal("compare")} className="btn btn-ink btn-sm w-full">
+            Compare selected
           </button>
         </div>
       )}

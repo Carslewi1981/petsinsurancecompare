@@ -41,12 +41,33 @@ const languages: { code: LangCode; label: string; flag: string }[] = [
   { code: "ms", label: "Bahasa Melayu", flag: "🇲🇾" },
 ];
 
+export function PawMark({ size = 34 }: { size?: number }) {
+  const paw = (
+    <>
+      <ellipse cx="0" cy="0" rx="8" ry="6.5" />
+      <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" />
+      <ellipse cx="-3.5" cy="-15" rx="4" ry="5" />
+      <ellipse cx="4" cy="-15" rx="4" ry="5" />
+      <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" />
+    </>
+  );
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <circle cx="32" cy="32" r="31" fill="#0b3b3c" />
+      <g fill="#ffd23f">
+        <g transform="translate(25 41) rotate(-8)">{paw}</g>
+        <g transform="translate(44 22) rotate(15) scale(0.52)">{paw}</g>
+      </g>
+    </svg>
+  );
+}
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const langRef = useRef<HTMLDivElement>(null);
+  const langRefMobile = useRef<HTMLDivElement>(null);
   const { lang, setLang, t } = useStore();
 
   const selectedLang = languages.find((l) => l.code === lang) ?? languages[0];
@@ -59,254 +80,177 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      const inside =
+        langRef.current?.contains(target) || langRefMobile.current?.contains(target);
+      if (!inside) setLangOpen(false);
+    }
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
         setLangOpen(false);
+        setMenuOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", onKey);
+    };
   }, []);
+
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+
+  const langMenu = (
+    <div
+      role="menu"
+      className="absolute right-0 top-full mt-2 overflow-y-auto bg-paper"
+      style={{
+        border: "2px solid var(--color-ink)",
+        borderRadius: 12,
+        minWidth: 200,
+        maxHeight: 340,
+        boxShadow: "4px 4px 0 var(--color-ink)",
+        zIndex: 100,
+      }}
+    >
+      {languages.map((l) => (
+        <button
+          key={l.code}
+          role="menuitem"
+          onClick={() => {
+            setLang(l.code);
+            setLangOpen(false);
+          }}
+          className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-mint-soft"
+          style={{
+            fontSize: 15,
+            fontWeight: lang === l.code ? 700 : 500,
+            background: lang === l.code ? "var(--color-tag-soft)" : undefined,
+          }}
+        >
+          <span aria-hidden>{l.flag}</span>
+          <span>{l.label}</span>
+        </button>
+      ))}
+    </div>
+  );
 
   return (
     <>
-      <motion.nav
-        initial={false}
-        animate={{
-          backgroundColor: scrolled ? "rgba(12,12,13,0.88)" : "rgba(12,12,13,0)",
-          borderBottomColor: scrolled ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0)",
-        }}
-        transition={{ duration: 0.3 }}
-        className="fixed top-0 left-0 right-0 z-50 border-b"
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] btn btn-sm"
+      >
+        Skip to content
+      </a>
+      <nav
+        aria-label="Main"
+        className="sticky top-0 z-50 border-b"
         style={{
-          backdropFilter: scrolled ? "blur(24px) saturate(1.6)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(24px) saturate(1.6)" : "none",
-          height: 64,
+          background: "rgba(246,248,245,0.94)",
+          backdropFilter: "blur(10px)",
+          borderColor: "var(--color-line)",
+          height: 68,
         }}
       >
-        <div className="max-w-[1200px] mx-auto px-6 h-full flex items-center justify-between">
-          {/* Wordmark */}
-          <Link href="/" className="flex items-center gap-3 group">
-            {/* Family paw mark */}
-            <svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <defs>
-                <mask id="nav-paw-mask">
-                  <rect width="64" height="64" fill="white"/>
-                  {/* Big paw */}
-                  <g transform="translate(25 41) rotate(-8)">
-                    <ellipse cx="0" cy="0" rx="8" ry="6.5" fill="black"/>
-                    <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" fill="black"/>
-                    <ellipse cx="-3.5" cy="-15" rx="4" ry="5" fill="black"/>
-                    <ellipse cx="4" cy="-15" rx="4" ry="5" fill="black"/>
-                    <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" fill="black"/>
-                  </g>
-                  {/* Small paw */}
-                  <g transform="translate(44 22) rotate(15) scale(0.52)">
-                    <ellipse cx="0" cy="0" rx="8" ry="6.5" fill="black"/>
-                    <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" fill="black"/>
-                    <ellipse cx="-3.5" cy="-15" rx="4" ry="5" fill="black"/>
-                    <ellipse cx="4" cy="-15" rx="4" ry="5" fill="black"/>
-                    <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" fill="black"/>
-                  </g>
-                </mask>
-              </defs>
-              <circle cx="32" cy="32" r="30" fill="#c9a96e" mask="url(#nav-paw-mask)"/>
-            </svg>
-            <div className="flex items-baseline gap-1">
-              <span
-                className="font-[var(--font-playfair-next)] italic text-white leading-none tracking-tight"
-                style={{ fontSize: 20, fontWeight: 500 }}
-              >
-                PetPlan
-              </span>
-              <span
-                className="font-[var(--font-inter-next)] text-white/40 leading-none"
-                style={{ fontSize: 11, fontWeight: 300, letterSpacing: "0.18em", textTransform: "uppercase", marginTop: 3 }}
-              >
-                Compare
-              </span>
-            </div>
+        <div className="max-w-[1240px] mx-auto px-5 sm:px-8 h-full flex items-center justify-between gap-6">
+          <Link href="/" className="flex items-center gap-3" aria-label="PetPlan Compare, home">
+            <PawMark />
+            <span className="heading" style={{ fontSize: 24, lineHeight: 1 }}>
+              PetPlan <span style={{ color: "var(--color-teal)" }}>Compare</span>
+            </span>
           </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-1">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="transition-colors"
-                style={{
-                  fontSize: 12,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  fontWeight: 500,
-                  color: pathname === link.href ? "#fff" : "rgba(255,255,255,0.45)",
-                }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "#fff"; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = pathname === link.href ? "#fff" : "rgba(255,255,255,0.45)"; }}
+                aria-current={isActive(link.href) ? "page" : undefined}
+                className="px-3 py-2 rounded-full transition-colors hover:bg-mint-soft"
+                style={{ fontSize: 16, fontWeight: isActive(link.href) ? 700 : 500 }}
               >
-                {link.label}
+                <span className={isActive(link.href) ? "highlight" : ""}>{link.label}</span>
               </Link>
             ))}
           </div>
 
-          {/* Right controls */}
-          <div className="hidden md:flex items-center gap-5">
-            {/* Language */}
+          <div className="hidden md:flex items-center gap-4">
             <div className="relative" ref={langRef}>
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                className="flex items-center gap-1.5 transition-colors"
-                style={{ fontSize: 11, letterSpacing: "0.05em", color: "rgba(255,255,255,0.4)" }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "rgba(255,255,255,0.8)"; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "rgba(255,255,255,0.4)"; }}
+                aria-haspopup="menu"
+                aria-expanded={langOpen}
+                aria-label={`Language: ${selectedLang.label}`}
+                className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-mint-soft"
+                style={{ fontSize: 15, fontWeight: 500 }}
               >
-                <Globe className="w-3 h-3" />
-                <span>{selectedLang.flag}</span>
-                <ChevronDown className="w-2.5 h-2.5" />
+                <Globe className="w-4 h-4" />
+                <span aria-hidden>{selectedLang.flag}</span>
+                <ChevronDown className="w-3.5 h-3.5" />
               </button>
-
-              <AnimatePresence>
-                {langOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-3 overflow-y-auto"
-                    style={{
-                      background: "#111115",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      minWidth: 190,
-                      maxHeight: 340,
-                      boxShadow: "0 24px 48px rgba(0,0,0,0.7)",
-                    }}
-                  >
-                    {languages.map((l) => (
-                      <button
-                        key={l.code}
-                        onClick={() => { setLang(l.code); setLangOpen(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-white/5"
-                        style={{
-                          fontSize: 12,
-                          color: lang === l.code ? "#c9a96e" : "rgba(255,255,255,0.5)",
-                          background: lang === l.code ? "rgba(201,169,110,0.06)" : "transparent",
-                        }}
-                      >
-                        <span>{l.flag}</span>
-                        <span>{l.label}</span>
-                        {lang === l.code && <span className="ml-auto text-[#c9a96e]">·</span>}
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {langOpen && langMenu}
             </div>
-
-            {/* CTA */}
-            <Link href="/compare" className="btn-gold" style={{ fontSize: 11, padding: "10px 24px" }}>
+            <Link href="/compare" className="btn btn-sm">
               {t.nav_compareNow}
             </Link>
           </div>
 
-          {/* Mobile controls */}
-          <div className="md:hidden flex items-center gap-4">
-            <div className="relative">
+          <div className="md:hidden flex items-center gap-1">
+            <div className="relative" ref={langRefMobile}>
               <button
                 onClick={() => setLangOpen(!langOpen)}
-                style={{ color: "rgba(255,255,255,0.5)", fontSize: 14 }}
+                aria-label="Change language"
+                aria-haspopup="menu"
+                aria-expanded={langOpen}
+                className="p-2.5 rounded-full hover:bg-mint-soft"
               >
-                <Globe className="w-4 h-4" />
+                <Globe className="w-5 h-5" />
               </button>
-              <AnimatePresence>
-                {langOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 overflow-y-auto"
-                    style={{
-                      background: "#111115",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      minWidth: 190,
-                      maxHeight: 320,
-                      boxShadow: "0 24px 48px rgba(0,0,0,0.7)",
-                      zIndex: 100,
-                    }}
-                  >
-                    {languages.map((l) => (
-                      <button
-                        key={l.code}
-                        onClick={() => { setLang(l.code); setLangOpen(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-white/5"
-                        style={{
-                          fontSize: 12,
-                          color: lang === l.code ? "#c9a96e" : "rgba(255,255,255,0.5)",
-                        }}
-                      >
-                        <span>{l.flag}</span>
-                        <span>{l.label}</span>
-                      </button>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {langOpen && langMenu}
             </div>
-
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              style={{ color: "rgba(255,255,255,0.7)" }}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              className="p-2.5 rounded-full hover:bg-mint-soft"
             >
-              {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
-      </motion.nav>
+      </nav>
 
-      {/* Mobile menu */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="fixed top-[64px] left-0 right-0 z-40 md:hidden"
-            style={{
-              background: "rgba(12,12,13,0.97)",
-              borderBottom: "1px solid rgba(255,255,255,0.07)",
-              backdropFilter: "blur(20px)",
-            }}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.15 }}
+            className="fixed top-[68px] left-0 right-0 z-40 md:hidden bg-chart border-b"
+            style={{ borderColor: "var(--color-line)" }}
           >
-            <div className="max-w-[1200px] mx-auto px-6 py-6 flex flex-col gap-5">
+            <div className="px-5 py-5 flex flex-col">
               {links.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
+                  aria-current={isActive(link.href) ? "page" : undefined}
+                  className="py-3.5 border-b"
                   style={{
-                    fontSize: 13,
-                    letterSpacing: "0.08em",
-                    textTransform: "uppercase",
-                    fontWeight: 500,
-                    color: pathname === link.href ? "#fff" : "rgba(255,255,255,0.4)",
+                    fontSize: 20,
+                    fontWeight: isActive(link.href) ? 700 : 500,
+                    borderColor: "var(--color-line)",
                   }}
                 >
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/compare"
-                onClick={() => setMenuOpen(false)}
-                className="btn-gold text-center justify-center mt-2"
-                style={{ fontSize: 11 }}
-              >
+              <Link href="/compare" onClick={() => setMenuOpen(false)} className="btn mt-5">
                 {t.nav_compareNow}
               </Link>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Phone, Globe, Mail, Copy, Check, ExternalLink } from "lucide-react";
 import { useStore } from "@/lib/store";
@@ -9,6 +9,13 @@ export default function ContactModal() {
   const { activeModal, setActiveModal, contactInsurer, t } = useStore();
   const [copied, setCopied] = useState<string | null>(null);
   const isOpen = activeModal === "contact" && contactInsurer !== null;
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setActiveModal(null);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [isOpen, setActiveModal]);
 
   const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -31,35 +38,39 @@ export default function ContactModal() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4"
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+          style={{ background: "rgba(7,42,43,0.6)" }}
           onClick={(e) => e.target === e.currentTarget && setActiveModal(null)}
         >
           <motion.div
-            initial={{ opacity: 0, y: 16, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 16, scale: 0.97 }}
-            className="bg-white w-full max-w-md overflow-hidden"
-            style={{ borderRadius: 18, border: "1px solid #e0e0e0" }}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-title"
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 14 }}
+            className="bg-paper w-full max-w-md overflow-hidden"
+            style={{ borderRadius: 16, border: "2px solid var(--color-ink)", boxShadow: "6px 6px 0 var(--color-ink)" }}
           >
-            <div className="h-1 w-full" style={{ backgroundColor: contactInsurer.color }} />
-
-            <div className="flex items-center justify-between p-6" style={{ borderBottom: "1px solid #f0f0f0" }}>
-              <div className="flex items-center gap-3">
-                <div
-                  className="w-12 h-12 flex items-center justify-center text-2xl"
-                  style={{ backgroundColor: contactInsurer.color + "15", borderRadius: 8 }}
-                >
-                  {contactInsurer.logo}
-                </div>
-                <div>
-                  <h2 className="font-semibold" style={{ fontSize: 17, letterSpacing: "-0.374px", color: contactInsurer.color }}>
-                    {contactInsurer.name}
-                  </h2>
-                  <p className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>{contactInsurer.tagline}</p>
-                </div>
+            <div
+              className="flex items-start justify-between gap-3 p-6"
+              style={{ borderBottom: "2px solid var(--color-ink)", background: "var(--color-mint-soft)" }}
+            >
+              <div>
+                <h2 id="contact-title" className="heading flex items-center gap-2.5" style={{ fontSize: 30 }}>
+                  <span aria-hidden className="inline-block rounded-full flex-shrink-0" style={{ width: 12, height: 12, background: contactInsurer.color }} />
+                  {contactInsurer.name}
+                </h2>
+                <p className="mt-1" style={{ fontSize: 15, color: "var(--color-muted)", lineHeight: 1.4 }}>
+                  {contactInsurer.tagline}
+                </p>
               </div>
-              <button onClick={() => setActiveModal(null)} className="p-2 text-[#7a7a7a] hover:text-[#1d1d1f] transition-colors">
-                <X className="w-5 h-5" />
+              <button
+                onClick={() => setActiveModal(null)}
+                aria-label="Close"
+                className="p-2 -m-2 rounded-full hover:bg-black/10 flex-shrink-0"
+              >
+                <X className="w-6 h-6" />
               </button>
             </div>
 
@@ -68,31 +79,28 @@ export default function ContactModal() {
                 <div
                   key={key}
                   className="flex items-center gap-3 p-3"
-                  style={{ background: "#f5f5f7", borderRadius: 11 }}
+                  style={{ border: "2px solid var(--color-line)", borderRadius: 12 }}
                 >
-                  <div
-                    className="w-8 h-8 flex items-center justify-center"
-                    style={{ background: "#e8f0fb", borderRadius: 8 }}
-                  >
-                    <Icon className="w-4 h-4 text-[#0066cc]" />
-                  </div>
+                  <Icon className="w-5 h-5 flex-shrink-0" style={{ color: "var(--color-teal)" }} aria-hidden />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[#7a7a7a]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>{label}</div>
-                    <div className="text-[#1d1d1f] truncate" style={{ fontSize: 14, letterSpacing: "-0.224px" }}>{value}</div>
+                    <div style={{ fontSize: 14, color: "var(--color-muted)" }}>{label}</div>
+                    <div className="truncate" style={{ fontSize: 16, fontWeight: 600 }}>
+                      {value}
+                    </div>
                   </div>
                   <button
                     onClick={() => copyToClipboard(value, key)}
-                    className="flex items-center gap-1 text-[#0066cc] hover:text-[#0071e3] transition-colors px-3 py-1.5 active:scale-95"
-                    style={{ border: "1px solid #0066cc", borderRadius: 9999, fontSize: 12 }}
+                    className="btn btn-quiet btn-sm"
+                    style={{ padding: "7px 12px" }}
                   >
                     {copied === key ? (
                       <>
-                        <Check className="w-3 h-3 text-green-600" />
-                        <span className="text-green-600">{t.modal_copied}</span>
+                        <Check className="w-4 h-4" />
+                        {t.modal_copied}
                       </>
                     ) : (
                       <>
-                        <Copy className="w-3 h-3" />
+                        <Copy className="w-4 h-4" />
                         {t.modal_copy}
                       </>
                     )}
@@ -100,23 +108,12 @@ export default function ContactModal() {
                 </div>
               ))}
 
-              <div className="flex flex-col gap-2 pt-2">
-                <a
-                  href={contactInsurer.contact.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-2 py-3 text-white transition-colors active:scale-95"
-                  style={{ backgroundColor: "#0066cc", borderRadius: 9999, fontSize: 17, letterSpacing: "-0.374px" }}
-                >
+              <div className="flex flex-col gap-2.5 pt-3">
+                <a href={contactInsurer.contact.website} target="_blank" rel="noopener noreferrer" className="btn">
                   <ExternalLink className="w-4 h-4" />
                   {t.modal_visit}
                 </a>
-                <button
-                  className="flex items-center justify-center gap-2 py-3 text-[#0066cc] hover:text-[#0071e3] transition-colors active:scale-95"
-                  style={{ border: "1px solid #0066cc", borderRadius: 9999, fontSize: 17, letterSpacing: "-0.374px" }}
-                >
-                  {t.modal_callback}
-                </button>
+                <button className="btn btn-quiet">{t.modal_callback}</button>
               </div>
             </div>
           </motion.div>

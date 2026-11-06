@@ -2,16 +2,16 @@
 
 import { getBreedById } from "@/lib/breeds";
 import { getRiskLevelColor, getRiskLevelLabel } from "@/lib/healthRisk";
-import { AlertTriangle, ShieldCheck, Heart, Info } from "lucide-react";
+import { AlertTriangle, ShieldCheck, Heart } from "lucide-react";
 
 interface Props {
   breedId: string;
 }
 
 const SEVERITY_COLOR = {
-  mild:     { bg: "#f0fdf4", text: "#16a34a", dot: "#16a34a" },
-  moderate: { bg: "#fffbeb", text: "#d97706", dot: "#d97706" },
-  severe:   { bg: "#fef2f2", text: "#dc2626", dot: "#dc2626" },
+  mild: { bg: "#e3f2ea", text: "#0f5a31", dot: "#17703f" },
+  moderate: { bg: "#fff1b8", text: "#6b3a00", dot: "#a85a00" },
+  severe: { bg: "#fbe3df", text: "#8f2315", dot: "#c4301f" },
 };
 
 export default function BreedRiskCard({ breedId }: Props) {
@@ -25,100 +25,97 @@ export default function BreedRiskCard({ breedId }: Props) {
 
   return (
     <div
-      className="mt-4 bg-white border"
-      style={{ borderRadius: 14, border: `1.5px solid ${riskColor}33`, overflow: "hidden" }}
+      className="mt-4 bg-paper overflow-hidden"
+      style={{ borderRadius: 12, border: "2px solid var(--color-ink)" }}
     >
-      {/* Header bar */}
       <div
-        className="px-4 py-3 flex items-center justify-between"
-        style={{ background: `${riskColor}12` }}
+        className="px-4 py-3 flex items-center justify-between gap-2"
+        style={{ background: "var(--color-mint-soft)", borderBottom: "2px solid var(--color-ink)" }}
       >
-        <div className="flex items-center gap-2">
-          <Heart className="w-4 h-4" style={{ color: riskColor }} />
-          <span className="font-semibold text-[#1d1d1f]" style={{ fontSize: 13, letterSpacing: "-0.12px" }}>
+        <div className="flex items-center gap-2 min-w-0">
+          <Heart className="w-4 h-4 flex-shrink-0" style={{ color: riskColor }} aria-hidden />
+          <span className="font-bold truncate" style={{ fontSize: 15 }}>
             {breed.name}
           </span>
         </div>
         <span
-          className="font-semibold px-2 py-0.5"
-          style={{ fontSize: 11, color: riskColor, background: `${riskColor}18`, borderRadius: 9999 }}
+          className="px-2.5 py-0.5 rounded-full flex-shrink-0"
+          style={{ fontSize: 13, fontWeight: 700, color: "#fff", background: riskColor }}
         >
           {riskLabel}
         </span>
       </div>
 
-      <div className="px-4 py-3 space-y-3">
-        {/* Risk bar */}
+      <div className="px-4 py-3.5 space-y-3.5">
         <div>
-          <div className="flex justify-between mb-1">
-            <span className="text-[#7a7a7a]" style={{ fontSize: 11 }}>Health Risk Score</span>
-            <span className="font-semibold" style={{ fontSize: 11, color: riskColor }}>{breed.riskScore}/100</span>
+          <div className="flex justify-between mb-1.5" style={{ fontSize: 14 }}>
+            <span style={{ color: "var(--color-muted)" }}>Health risk score</span>
+            <span className="font-bold">{breed.riskScore}/100</span>
           </div>
-          <div className="w-full bg-[#f0f0f0] h-1.5" style={{ borderRadius: 9999 }}>
-            <div
-              className="h-1.5 transition-all"
-              style={{ width: `${breed.riskScore}%`, background: riskColor, borderRadius: 9999 }}
-            />
+          <div
+            className="w-full h-2.5 rounded-full"
+            style={{ background: "var(--color-mint)" }}
+            role="meter"
+            aria-valuenow={breed.riskScore}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Health risk score"
+          >
+            <div className="h-full rounded-full" style={{ width: `${breed.riskScore}%`, background: riskColor }} />
           </div>
         </div>
 
-        {/* Lifespan */}
-        <div className="flex items-center justify-between">
-          <span className="text-[#7a7a7a]" style={{ fontSize: 11 }}>Avg. lifespan</span>
-          <span className="font-semibold text-[#1d1d1f]" style={{ fontSize: 11 }}>{breed.avgLifespan}</span>
+        <div className="leader" style={{ fontSize: 14 }}>
+          <span style={{ color: "var(--color-muted)" }}>Average lifespan</span>
+          <span className="font-bold">{breed.avgLifespan}</span>
         </div>
 
-        {/* Blurb */}
-        <p className="text-[#555]" style={{ fontSize: 11, lineHeight: 1.5 }}>{breed.blurb}</p>
+        <p style={{ fontSize: 14, lineHeight: 1.5, color: "var(--color-muted)" }}>{breed.blurb}</p>
 
-        {/* Conditions */}
         {breed.conditions.length > 0 && breed.conditions[0].tags.length > 0 && (
           <div>
-            <p className="text-[#7a7a7a] font-semibold mb-1.5" style={{ fontSize: 11 }}>Known Health Risks</p>
-            <div className="space-y-1">
+            <h4 className="heading mb-1.5" style={{ fontSize: 17 }}>
+              Known health risks
+            </h4>
+            <ul className="space-y-1">
               {breed.conditions.map((c) => {
                 const col = SEVERITY_COLOR[c.severity];
                 return (
-                  <div
+                  <li
                     key={c.name}
-                    className="flex items-center gap-2 px-2 py-1.5"
-                    style={{ background: col.bg, borderRadius: 7 }}
+                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-md"
+                    style={{ background: col.bg }}
                   >
-                    <span
-                      className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                      style={{ background: col.dot }}
-                    />
-                    <span style={{ fontSize: 11, color: col.text, lineHeight: 1.3 }}>{c.name}</span>
-                  </div>
+                    <span aria-hidden className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: col.dot }} />
+                    <span style={{ fontSize: 14, color: col.text, lineHeight: 1.3 }}>
+                      {c.name}
+                      <span className="sr-only"> ({c.severity})</span>
+                    </span>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         )}
 
-        {/* Warnings */}
         {(needsUnlimited || severeConds.length > 0) && (
           <div
-            className="flex items-start gap-2 px-3 py-2"
-            style={{ background: "#fffbeb", borderRadius: 8, border: "1px solid #fde68a" }}
+            className="flex items-start gap-2 px-3 py-2.5 rounded-lg"
+            style={{ background: "var(--color-tag-soft)" }}
           >
-            <AlertTriangle className="w-3.5 h-3.5 text-[#d97706] flex-shrink-0 mt-0.5" />
-            <p style={{ fontSize: 11, color: "#92400e", lineHeight: 1.4 }}>
+            <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" aria-hidden />
+            <p style={{ fontSize: 14, lineHeight: 1.4 }}>
               {needsUnlimited
                 ? "This breed may need unlimited annual coverage due to potentially high treatment costs."
-                : `${severeConds.length} severe condition${severeConds.length > 1 ? "s" : ""} — ensure hereditary conditions are covered.`}
+                : `${severeConds.length} severe condition${severeConds.length > 1 ? "s" : ""}. Make sure hereditary conditions are covered.`}
             </p>
           </div>
         )}
 
-        {/* Coverage tip */}
-        <div
-          className="flex items-start gap-2 px-3 py-2"
-          style={{ background: "#eff6ff", borderRadius: 8 }}
-        >
-          <ShieldCheck className="w-3.5 h-3.5 text-[#0066cc] flex-shrink-0 mt-0.5" />
-          <p style={{ fontSize: 11, color: "#1e40af", lineHeight: 1.4 }}>
-            Plan cards below now show a <strong>breed match score</strong> — higher is better for {breed.name}s.
+        <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg" style={{ background: "var(--color-mint-soft)" }}>
+          <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "var(--color-teal)" }} aria-hidden />
+          <p style={{ fontSize: 14, lineHeight: 1.4 }}>
+            Plan cards now show a <strong>breed match score</strong>. Higher is better for {breed.name}s.
           </p>
         </div>
       </div>

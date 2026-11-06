@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Inter, Playfair_Display } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,22 +7,18 @@ import { StoreProvider } from "@/lib/store";
 import CompareModal from "@/components/CompareModal";
 import ContactModal from "@/components/ContactModal";
 
-const bebasNeue = Bebas_Neue({
-  variable: "--font-bebas-next",
-  weight: "400",
-  subsets: ["latin"],
+const bricolage = Bricolage_Grotesque({
+  variable: "--font-bricolage",
+  subsets: ["latin", "latin-ext"],
+  axes: ["opsz", "wdth"],
+  display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter-next",
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
-});
-
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair-next",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -42,12 +38,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bebasNeue.variable} ${inter.variable} ${playfairDisplay.variable} antialiased`}
+      className={`${bricolage.variable} ${plexMono.variable} antialiased`}
     >
-      <body className="bg-ivory text-text-primary font-[var(--font-inter)] min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col">
         <StoreProvider>
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main id="main" className="flex-1">{children}</main>
           <Footer />
           <CompareModal />
           <ContactModal />

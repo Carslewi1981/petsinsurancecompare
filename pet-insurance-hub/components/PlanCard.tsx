@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, X, ChevronDown, ChevronUp, Phone, Globe } from "lucide-react";
+import { Check, X, ChevronDown, ChevronUp, Phone, ArrowUpRight } from "lucide-react";
 import { Insurer, ANIMAL_TYPES } from "@/lib/insurers";
 import { useStore } from "@/lib/store";
 import { getPriceMultiplier } from "@/lib/priceMultiplier";
@@ -16,7 +16,7 @@ interface PlanCardProps {
   index?: number;
 }
 
-export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) {
+export default function PlanCard({ insurer, animal }: PlanCardProps) {
   const [expanded, setExpanded] = useState(false);
   const { comparedIds, toggleCompare, setActiveModal, setContactInsurer, t, petProfile } = useStore();
   const isSelected = comparedIds.includes(insurer.id);
@@ -41,157 +41,158 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
     setActiveModal("contact");
   };
 
+  const terms = [
+    { label: t.card_reimburse, value: insurer.reimbursement },
+    { label: t.card_annualMax, value: insurer.maxAnnual },
+    { label: t.card_deductible, value: insurer.deductible },
+    { label: t.card_claims, value: insurer.claimsTime },
+  ];
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.3 }}
-      className="relative bg-white transition-all duration-200 hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
+    <article
+      className="relative flex flex-col h-full"
       style={{
-        border: isSelected ? "1.5px solid #c9a96e" : "1px solid rgba(0,0,0,0.08)",
+        background: "var(--color-paper)",
+        border: `2px solid ${isSelected ? "var(--color-ink)" : "var(--color-line)"}`,
+        borderRadius: 14,
+        boxShadow: isSelected ? "5px 5px 0 var(--color-tag)" : "none",
+        transition: "box-shadow 0.15s, border-color 0.15s",
       }}
     >
-      <div className="absolute top-4 right-4">
-        <button
-          onClick={() => toggleCompare(insurer.id)}
-          className="w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors active:scale-95"
-          style={{
-            backgroundColor: isSelected ? "#c9a96e" : "transparent",
-            borderColor: isSelected ? "#c9a96e" : "#d2d2d7",
-          }}
-        >
-          {isSelected && <Check className="w-3 h-3 text-white" />}
-        </button>
-      </div>
-
-      <div className="p-6">
-        <div className="flex items-start gap-3 mb-5 pr-8">
-          {insurer.logo && (
-            <div
-              className="w-12 h-12 flex items-center justify-center text-2xl flex-shrink-0"
-              style={{ backgroundColor: insurer.color + "15", borderRadius: 8 }}
-            >
-              {insurer.logo}
-            </div>
-          )}
-          <div>
-            <h3
-              className="font-semibold leading-tight"
-              style={{ fontSize: 17, letterSpacing: "-0.374px", color: insurer.color }}
-            >
+      <div className="p-6 flex flex-col flex-1">
+        <div className="flex items-start justify-between gap-3 mb-4" style={{ minHeight: 118 }}>
+          <div className="min-w-0">
+            <h3 className="heading flex items-center gap-2.5" style={{ fontSize: 28 }}>
+              <span
+                aria-hidden
+                className="inline-block flex-shrink-0 rounded-full"
+                style={{ width: 12, height: 12, background: insurer.color }}
+              />
               {insurer.name}
             </h3>
-            <p className="text-[#7a7a7a] text-[14px] leading-tight mt-0.5" style={{ letterSpacing: "-0.224px" }}>
+            <p style={{ fontSize: 15, color: "var(--color-muted)", lineHeight: 1.4, marginTop: 4 }}>
               {insurer.tagline}
             </p>
           </div>
-        </div>
-
-        <div className="mb-5">
-          <div className="flex items-baseline gap-1">
-            <span className="font-semibold text-[#1d1d1f]" style={{ fontSize: 34, letterSpacing: "-0.374px" }}>
-              ${price}
-            </span>
-            <span className="text-[#7a7a7a] text-[17px]">/mo</span>
-            {priceAdjusted && (
-              <span
-                className="text-[#c9a96e] font-semibold"
-                style={{ fontSize: 11, letterSpacing: "-0.12px", marginLeft: 4 }}
-              >
-                est.
-              </span>
-            )}
-          </div>
-          <div className="text-[#7a7a7a] text-[14px]" style={{ letterSpacing: "-0.224px" }}>
-            {animal === "all" ? t.card_startingFrom : t.card_forAnimal.replace("{animal}", animalLabel)}
-          </div>
-        </div>
-
-        <div
-          className="grid grid-cols-4 gap-0 mb-5 bg-[#f5f5f7]"
-          style={{ borderRadius: 11, overflow: "hidden" }}
-        >
-          {[
-            { label: t.card_reimburse, value: insurer.reimbursement },
-            { label: t.card_annualMax, value: insurer.maxAnnual },
-            { label: t.card_deductible, value: insurer.deductible },
-            { label: t.card_claims, value: insurer.claimsTime },
-          ].map((stat, i) => (
-            <div
-              key={stat.label}
-              className="flex flex-col items-center py-3 px-1"
-              style={{ borderRight: i < 3 ? "1px solid #e0e0e0" : "none" }}
-            >
-              <span className="text-[#1d1d1f] text-[12px] font-semibold leading-tight text-center">
-                {stat.value}
-              </span>
-              <span className="text-[#7a7a7a] text-[10px] mt-0.5 text-center">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex items-center justify-between mb-4">
-          <StarRating rating={insurer.rating} reviews={insurer.reviews} size="sm" />
-          <span className="text-[12px] text-[#7a7a7a]">{t.card_app} ⭐ {insurer.appRating}</span>
-        </div>
-
-        {/* Breed match badge */}
-        {breedMatch && (
-          <div
-            className="flex items-center justify-between px-3 py-2 mb-4"
+          <button
+            role="checkbox"
+            aria-checked={isSelected}
+            onClick={() => toggleCompare(insurer.id)}
+            aria-label={`Compare ${insurer.name}`}
+            className="flex items-center gap-2 flex-shrink-0 px-2.5 py-1.5 rounded-full"
             style={{
-              background: `${getGradeColor(breedMatch.grade)}12`,
-              border: `1px solid ${getGradeColor(breedMatch.grade)}30`,
-              borderRadius: 9,
+              fontSize: 14,
+              fontWeight: 600,
+              border: "2px solid var(--color-ink)",
+              background: isSelected ? "var(--color-tag)" : "transparent",
             }}
           >
-            <div>
-              <span className="font-semibold" style={{ fontSize: 11, color: getGradeColor(breedMatch.grade) }}>
-                Breed Match
-              </span>
-              <span className="text-[#7a7a7a] ml-1" style={{ fontSize: 11 }}>
-                {selectedBreed?.name}
-              </span>
+            <span
+              aria-hidden
+              className="flex items-center justify-center rounded"
+              style={{
+                width: 16,
+                height: 16,
+                border: "2px solid var(--color-ink)",
+                background: isSelected ? "var(--color-ink)" : "transparent",
+              }}
+            >
+              {isSelected && <Check className="w-3 h-3" color="#fff" strokeWidth={4} />}
+            </span>
+            Compare
+          </button>
+        </div>
+
+        <div className="flex items-baseline gap-1.5 mb-5">
+          <span className="display" style={{ fontSize: 56 }}>
+            ${price}
+          </span>
+          <span style={{ fontSize: 18, fontWeight: 600 }}>/mo</span>
+          {priceAdjusted && (
+            <span
+              className="rounded px-1.5 py-0.5"
+              style={{ fontSize: 13, fontWeight: 700, background: "var(--color-tag-soft)", marginLeft: 4 }}
+            >
+              est.
+            </span>
+          )}
+          <span style={{ fontSize: 14, color: "var(--color-muted)", marginLeft: 6 }}>
+            {animal === "all" ? t.card_startingFrom : t.card_forAnimal.replace("{animal}", animalLabel)}
+          </span>
+        </div>
+
+        <dl className="mb-5 space-y-1.5">
+          {terms.map((term) => (
+            <div key={term.label} className="leader" style={{ fontSize: 15 }}>
+              <dt style={{ color: "var(--color-muted)" }}>{term.label}</dt>
+              <dd style={{ fontWeight: 650, textAlign: "right" }}>{term.value}</dd>
             </div>
-            <div className="flex items-center gap-1.5">
+          ))}
+        </dl>
+
+        <div className="flex items-center justify-between gap-3 flex-wrap mb-4">
+          <StarRating rating={insurer.rating} reviews={insurer.reviews} size="sm" />
+          <span style={{ fontSize: 14, color: "var(--color-muted)" }}>
+            {t.card_app} {insurer.appRating}
+          </span>
+        </div>
+
+        {breedMatch && (
+          <div
+            className="flex items-center justify-between gap-3 px-3.5 py-2.5 mb-4"
+            style={{
+              background: `${getGradeColor(breedMatch.grade)}14`,
+              border: `2px solid ${getGradeColor(breedMatch.grade)}`,
+              borderRadius: 10,
+            }}
+          >
+            <p style={{ fontSize: 14, lineHeight: 1.3 }}>
+              <strong>Breed match</strong>
+              <span style={{ color: "var(--color-muted)" }}> for {selectedBreed?.name}</span>
+            </p>
+            <div className="flex items-center gap-2 flex-shrink-0">
               <span
-                className="font-semibold w-6 h-6 flex items-center justify-center"
+                className="flex items-center justify-center"
                 style={{
-                  fontSize: 13,
+                  width: 30,
+                  height: 30,
+                  borderRadius: 8,
+                  fontWeight: 800,
+                  fontSize: 16,
                   color: "#fff",
                   background: getGradeColor(breedMatch.grade),
-                  borderRadius: 6,
                 }}
               >
                 {breedMatch.grade}
               </span>
-              <span className="text-[#7a7a7a]" style={{ fontSize: 11 }}>{breedMatch.score}/100</span>
+              <span style={{ fontSize: 14, color: "var(--color-muted)" }}>{breedMatch.score}/100</span>
             </div>
           </div>
         )}
 
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <ul className="flex flex-wrap gap-1.5 mb-4" aria-label="Animals covered">
           {insurer.animals.map((a) => {
             const at = ANIMAL_TYPES.find((x) => x.id === a);
             return (
-              <span
+              <li
                 key={a}
-                className="flex items-center gap-1 text-[#333333] text-[12px] px-3 py-1"
-                style={{ background: "#f5f5f7", borderRadius: 9999 }}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full"
+                style={{ fontSize: 14, background: "var(--color-mint-soft)" }}
               >
-                <span className="text-xs">{at?.icon}</span>
-                <span>{at?.label}</span>
-              </span>
+                <span aria-hidden>{at?.icon}</span>
+                {at?.label}
+              </li>
             );
           })}
-        </div>
+        </ul>
 
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-[14px] text-[#c9a96e] mb-4 hover:text-[#a8875a] transition-colors"
-          style={{ letterSpacing: "-0.224px" }}
+          aria-expanded={expanded}
+          className="flex items-center gap-1.5 link-u self-start mb-4"
+          style={{ fontSize: 15 }}
         >
-          {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
           {expanded ? t.card_hideFeatures : t.card_showFeatures}
         </button>
 
@@ -199,83 +200,91 @@ export default function PlanCard({ insurer, animal, index = 0 }: PlanCardProps) 
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            className="mb-4 space-y-4"
+            className="mb-4 space-y-5 overflow-hidden"
           >
             <div>
-              <h4 className="text-[12px] font-semibold text-[#7a7a7a] mb-2">{t.card_covered}</h4>
-              <ul className="space-y-1">
+              <h4 className="heading mb-2" style={{ fontSize: 18 }}>
+                {t.card_covered}
+              </h4>
+              <ul className="space-y-1.5">
                 {insurer.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[14px] text-[#1d1d1f]" style={{ letterSpacing: "-0.224px" }}>
-                    <Check className="w-3.5 h-3.5 text-green-600 flex-shrink-0 mt-0.5" />
+                  <li key={f} className="flex items-start gap-2" style={{ fontSize: 15, lineHeight: 1.4 }}>
+                    <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "var(--color-teal)" }} strokeWidth={3} />
                     {f}
                   </li>
                 ))}
               </ul>
             </div>
             <div>
-              <h4 className="text-[12px] font-semibold text-[#7a7a7a] mb-2">{t.card_notCovered}</h4>
-              <ul className="space-y-1">
+              <h4 className="heading mb-2" style={{ fontSize: 18 }}>
+                {t.card_notCovered}
+              </h4>
+              <ul className="space-y-1.5">
                 {insurer.notCovered.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-[14px] text-[#7a7a7a]" style={{ letterSpacing: "-0.224px" }}>
-                    <X className="w-3.5 h-3.5 text-red-500 flex-shrink-0 mt-0.5" />
+                  <li
+                    key={f}
+                    className="flex items-start gap-2"
+                    style={{ fontSize: 15, lineHeight: 1.4, color: "var(--color-muted)" }}
+                  >
+                    <X className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "var(--color-stamp)" }} strokeWidth={3} />
                     {f}
                   </li>
                 ))}
               </ul>
             </div>
-            <div
-              className="flex items-center gap-2 text-[12px] text-[#7a7a7a] px-3 py-2 bg-[#f5f5f7]"
-              style={{ borderRadius: 8 }}
-            >
-              <span>⏱</span>
-              {t.card_waitingPeriod} {insurer.waitingPeriod}
-            </div>
+            <p className="px-3.5 py-2.5 rounded-lg" style={{ fontSize: 14, background: "var(--color-mint-soft)" }}>
+              {t.card_waitingPeriod} <strong>{insurer.waitingPeriod}</strong>
+            </p>
 
-            {/* Breed-specific insights */}
             {breedMatch && breedMatch.highlights.length > 0 && (
-              <div className="space-y-1">
+              <ul className="space-y-1.5">
                 {breedMatch.highlights.map((h) => (
-                  <div key={h} className="flex items-start gap-2 px-3 py-1.5 bg-[#f0fdf4]" style={{ borderRadius: 7 }}>
-                    <Check className="w-3 h-3 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span className="text-green-800" style={{ fontSize: 11 }}>{h}</span>
-                  </div>
+                  <li
+                    key={h}
+                    className="flex items-start gap-2 px-3 py-2 rounded-lg"
+                    style={{ fontSize: 14, background: "var(--color-mint-soft)" }}
+                  >
+                    <Check className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "var(--color-teal)" }} strokeWidth={3} />
+                    {h}
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
             {breedMatch && breedMatch.warnings.length > 0 && (
-              <div className="space-y-1">
+              <ul className="space-y-1.5">
                 {breedMatch.warnings.map((w) => (
-                  <div key={w} className="flex items-start gap-2 px-3 py-1.5 bg-[#fffbeb]" style={{ borderRadius: 7 }}>
-                    <span className="text-[#d97706] flex-shrink-0 mt-0.5" style={{ fontSize: 10 }}>⚠</span>
-                    <span className="text-[#92400e]" style={{ fontSize: 11 }}>{w}</span>
-                  </div>
+                  <li
+                    key={w}
+                    className="flex items-start gap-2 px-3 py-2 rounded-lg"
+                    style={{ fontSize: 14, background: "var(--color-tag-soft)" }}
+                  >
+                    <span aria-hidden className="flex-shrink-0" style={{ fontWeight: 800 }}>
+                      !
+                    </span>
+                    {w}
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
           </motion.div>
         )}
 
-        <div className="flex gap-2">
-          <button
-            onClick={handleContact}
-            className="flex-1 flex items-center justify-center gap-1.5 text-[#c9a96e] text-[14px] py-2.5 hover:text-[#a8875a] transition-colors active:scale-95"
-            style={{ border: "1px solid #c9a96e", letterSpacing: "0.05em", textTransform: "uppercase" as const, fontSize: 11 }}
-          >
-            <Phone className="w-3 h-3" />
+        <div className="flex gap-2.5 mt-auto pt-2">
+          <button onClick={handleContact} className="btn btn-quiet btn-sm flex-1">
+            <Phone className="w-4 h-4" />
             {t.card_contact}
           </button>
           <a
             href={insurer.contact.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 text-[#0c0c0d] text-[11px] py-2.5 transition-colors active:scale-95"
-            style={{ background: "#c9a96e", letterSpacing: "0.05em", textTransform: "uppercase" }}
+            className="btn btn-sm flex-1"
           >
-            <Globe className="w-3 h-3" />
             {t.card_getQuote}
+            <ArrowUpRight className="w-4 h-4" />
           </a>
         </div>
       </div>
-    </motion.div>
+    </article>
   );
 }

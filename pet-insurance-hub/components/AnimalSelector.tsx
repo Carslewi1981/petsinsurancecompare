@@ -7,32 +7,35 @@ export default function AnimalSelector() {
   const { selectedAnimal, setSelectedAnimal } = useStore();
 
   return (
-    <div className="space-y-2">
-      <h3 className="font-semibold text-[#1d1d1f]" style={{ fontSize: 12, letterSpacing: "-0.12px" }}>
-        Animal Type
-      </h3>
-      <div className="flex flex-col gap-0.5">
+    <fieldset>
+      <legend className="heading mb-2" style={{ fontSize: 20 }}>
+        Animal type
+      </legend>
+      <div className="grid grid-cols-2 gap-1.5" role="radiogroup" aria-label="Animal type">
         {ANIMAL_TYPES.map((animal) => {
           const active = selectedAnimal === animal.id;
           return (
             <button
               key={animal.id}
+              type="button"
+              role="radio"
+              aria-checked={active}
               onClick={() => setSelectedAnimal(animal.id)}
-              className="flex items-center gap-3 px-3 py-2 text-left transition-all active:scale-95"
+              className="flex items-center gap-2 px-3 py-2 text-left rounded-lg transition-colors"
               style={{
-                fontSize: 14,
-                letterSpacing: "-0.224px",
-                borderRadius: 8,
-                background: active ? "#0066cc" : "transparent",
-                color: active ? "#ffffff" : "#333333",
+                fontSize: 15,
+                fontWeight: active ? 700 : 500,
+                background: active ? "var(--color-scrub)" : "var(--color-paper)",
+                color: active ? "#fff" : "var(--color-ink)",
+                border: "2px solid var(--color-ink)",
               }}
             >
-              <span className="text-base">{animal.icon}</span>
-              <span>{animal.label}</span>
+              <span aria-hidden>{animal.icon}</span>
+              {animal.label}
             </button>
           );
         })}
       </div>
-    </div>
+    </fieldset>
   );
 }

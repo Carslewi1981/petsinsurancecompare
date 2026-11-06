@@ -2,25 +2,48 @@
 
 import Link from "next/link";
 import { useStore } from "@/lib/store";
-import { ArrowUpRight } from "lucide-react";
+import { PawMark } from "@/components/Navbar";
+
+function FooterLinks({ title, items }: { title: string; items: { label: string; href: string }[] }) {
+  return (
+    <div>
+      <h2 className="heading" style={{ fontSize: 20, color: "var(--color-tag)", marginBottom: 16 }}>
+        {title}
+      </h2>
+      <ul className="flex flex-col gap-2.5">
+        {items.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              className="text-white/80 hover:text-white underline-offset-4 hover:underline"
+              style={{ fontSize: 16 }}
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export default function Footer() {
   const { t } = useStore();
 
   const compareLinks = [
-    { label: t.footer_dogs, animal: "dogs" },
-    { label: t.footer_cats, animal: "cats" },
-    { label: t.footer_birds, animal: "birds" },
-    { label: t.footer_rabbits, animal: "rabbits" },
-    { label: t.footer_reptiles, animal: "reptiles" },
-    { label: t.footer_exotic, animal: "exotic" },
+    { label: t.footer_dogs, href: "/compare?animal=dogs" },
+    { label: t.footer_cats, href: "/compare?animal=cats" },
+    { label: t.footer_birds, href: "/compare?animal=birds" },
+    { label: t.footer_rabbits, href: "/compare?animal=rabbits" },
+    { label: t.footer_reptiles, href: "/compare?animal=reptiles" },
+    { label: t.footer_exotic, href: "/compare?animal=exotic" },
   ];
 
   const resourceLinks = [
-    { label: t.footer_deductibles, slug: "how-deductibles-work" },
-    { label: t.footer_preExisting, slug: "pre-existing-conditions" },
-    { label: t.footer_exoticGuide, slug: "exotic-pet-coverage-guide" },
-    { label: t.footer_whenToBuy, slug: "when-to-buy-pet-insurance" },
+    { label: t.footer_deductibles, href: "/resources/how-deductibles-work" },
+    { label: t.footer_preExisting, href: "/resources/pre-existing-conditions" },
+    { label: t.footer_exoticGuide, href: "/resources/exotic-pet-coverage-guide" },
+    { label: t.footer_whenToBuy, href: "/resources/when-to-buy-pet-insurance" },
   ];
 
   const companyLinks = [
@@ -30,119 +53,58 @@ export default function Footer() {
   ];
 
   return (
-    <footer style={{ background: "#0c0c0d", borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-      <div className="max-w-[1200px] mx-auto px-6">
-        {/* Top row */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-16 py-20 border-b" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <Link href="/" className="flex items-baseline gap-1.5 mb-6">
-              <span
-                className="font-[var(--font-playfair-next)] italic text-white leading-none"
-                style={{ fontSize: 22, fontWeight: 500 }}
-              >
-                PetPlan
-              </span>
-              <span style={{ fontSize: 10, letterSpacing: "0.18em", textTransform: "uppercase", color: "rgba(255,255,255,0.3)", fontWeight: 300 }}>
-                Compare
+    <footer className="on-dark" style={{ background: "var(--color-scrub)", color: "#fff" }}>
+      <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
+        <div
+          className="grid grid-cols-1 md:grid-cols-[1.6fr_1fr_1fr_1fr] gap-12 py-16 border-b"
+          style={{ borderColor: "rgba(255,255,255,0.14)" }}
+        >
+          <div>
+            <Link href="/" className="inline-flex items-center gap-3 mb-5" aria-label="PetPlan Compare, home">
+              <PawMark size={40} />
+              <span className="heading" style={{ fontSize: 28, lineHeight: 1 }}>
+                PetPlan Compare
               </span>
             </Link>
-            <p style={{ fontSize: 13, lineHeight: 1.8, color: "rgba(255,255,255,0.3)", maxWidth: 280 }}>
+            <p className="prose-measure text-white/80" style={{ fontSize: 16, lineHeight: 1.65, maxWidth: "36ch" }}>
               {t.footer_desc}
             </p>
-            <div className="mt-8">
-              <Link href="/compare" className="btn-gold" style={{ fontSize: 11, padding: "10px 24px" }}>
-                Compare Now
-                <ArrowUpRight className="w-3 h-3" />
+            <div className="mt-7">
+              <Link href="/compare" className="btn btn-sm">
+                Compare plans
               </Link>
             </div>
           </div>
 
-          {/* Compare */}
-          <div>
-            <h4 style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginBottom: 20 }}>
-              {t.footer_compare}
-            </h4>
-            <ul className="flex flex-col gap-3">
-              {compareLinks.map((a) => (
-                <li key={a.animal}>
-                  <Link
-                    href={`/compare?animal=${a.animal}`}
-                    style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", transition: "color 0.2s" }}
-                    onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "#c9a96e"; }}
-                    onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "rgba(255,255,255,0.45)"; }}
-                  >
-                    {a.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Resources */}
-          <div>
-            <h4 style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginBottom: 20 }}>
-              {t.footer_resources}
-            </h4>
-            <ul className="flex flex-col gap-3">
-              {resourceLinks.map((r) => (
-                <li key={r.slug}>
-                  <Link
-                    href={`/resources/${r.slug}`}
-                    style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", transition: "color 0.2s" }}
-                    onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "#c9a96e"; }}
-                    onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "rgba(255,255,255,0.45)"; }}
-                  >
-                    {r.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company */}
-          <div>
-            <h4 style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.25)", marginBottom: 20 }}>
-              {t.footer_company}
-            </h4>
-            <ul className="flex flex-col gap-3">
-              {companyLinks.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    style={{ fontSize: 13, color: "rgba(255,255,255,0.45)", transition: "color 0.2s" }}
-                    onMouseEnter={(e) => { (e.target as HTMLElement).style.color = "#c9a96e"; }}
-                    onMouseLeave={(e) => { (e.target as HTMLElement).style.color = "rgba(255,255,255,0.45)"; }}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FooterLinks title={t.footer_compare} items={compareLinks} />
+          <FooterLinks title={t.footer_resources} items={resourceLinks} />
+          <FooterLinks title={t.footer_company} items={companyLinks} />
         </div>
 
-        {/* Bottom row */}
-        <div className="py-8 flex flex-col gap-4">
+        <div className="py-8 flex flex-col gap-5">
           {/* Affiliate disclosure — required by FTC */}
-          <div
-            className="px-4 py-3"
-            style={{ background: "rgba(201,169,110,0.05)", border: "1px solid rgba(201,169,110,0.12)" }}
+          <p
+            className="px-5 py-4 text-white/85"
+            style={{
+              fontSize: 14,
+              lineHeight: 1.65,
+              background: "rgba(255,255,255,0.07)",
+              borderLeft: "4px solid var(--color-tag)",
+              borderRadius: 4,
+            }}
           >
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.28)", lineHeight: 1.7 }}>
-              <strong style={{ color: "#c9a96e", letterSpacing: "0.06em", textTransform: "uppercase", fontSize: 9 }}>
-                Affiliate Disclosure&nbsp;&nbsp;
-              </strong>
-              Some links on this site are affiliate links. If you click through and purchase a policy, PetPlan Compare may receive a commission from the insurer at no extra cost to you. This does not influence our rankings, coverage summaries, or editorial content — all 12 providers are evaluated using the same criteria regardless of affiliate relationship.
-            </p>
-          </div>
+            <strong className="text-white">Affiliate disclosure.</strong> Some links on this site are
+            affiliate links. If you click through and purchase a policy, PetPlan Compare may receive a
+            commission from the insurer at no extra cost to you. This does not influence our rankings,
+            coverage summaries, or editorial content — all 12 providers are evaluated using the same
+            criteria regardless of affiliate relationship.
+          </p>
 
-          {/* Legal disclaimer + copyright */}
           <div className="flex flex-col md:flex-row gap-4 justify-between">
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.18)", lineHeight: 1.7, maxWidth: 640 }}>
-              <strong style={{ color: "#c9a96e", letterSpacing: "0.06em", textTransform: "uppercase", fontSize: 9 }}>Disclaimer&nbsp;&nbsp;</strong>{t.footer_disclaimer}
+            <p className="text-white/70" style={{ fontSize: 14, lineHeight: 1.65, maxWidth: "80ch" }}>
+              <strong className="text-white">Disclaimer.</strong> {t.footer_disclaimer}
             </p>
-            <p style={{ fontSize: 11, color: "rgba(255,255,255,0.18)", flexShrink: 0 }}>
+            <p className="text-white/70 flex-shrink-0" style={{ fontSize: 14 }}>
               © {new Date().getFullYear()} PetPlan Compare
             </p>
           </div>

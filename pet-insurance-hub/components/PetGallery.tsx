@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Heart } from "lucide-react";
@@ -23,8 +23,6 @@ interface PetType {
   fact: string;
   ctaLabel: string;
   photos: PetPhoto[];
-  accentColor: string;
-  bgColor: string;
   riskNote: string;
 }
 
@@ -37,8 +35,6 @@ const PET_TYPES: PetType[] = [
     id: "dog",
     label: "Dogs",
     emoji: "🐕",
-    accentColor: "#0066cc",
-    bgColor: "#eff6ff",
     headline: "Man's best friend deserves the best coverage.",
     sub: "From Golden Retrievers to Dachshunds — every breed faces unique health risks. Find a plan built for your dog.",
     fact: "1 in 3 dogs needs emergency vet care each year. Average bill: $1,500–$5,000.",
@@ -59,8 +55,6 @@ const PET_TYPES: PetType[] = [
     id: "cat",
     label: "Cats",
     emoji: "🐈",
-    accentColor: "#7c3aed",
-    bgColor: "#faf5ff",
     headline: "Independent souls. Surprisingly expensive vet bills.",
     sub: "Cats hide illness well — until a $3,000 emergency reveals what you couldn't see. Be ready before it happens.",
     fact: "HCM affects 1 in 7 cats. Kidney disease costs $2,000–$8,000/year to manage.",
@@ -81,8 +75,6 @@ const PET_TYPES: PetType[] = [
     id: "bird",
     label: "Birds",
     emoji: "🦜",
-    accentColor: "#059669",
-    bgColor: "#f0fdf4",
     headline: "Birds live 20–80 years. So do their vet bills.",
     sub: "Avian vets are specialists — and they charge like it. A single respiratory infection can cost $800–$2,500.",
     fact: "Parrots can live 60+ years. One crop obstruction surgery averages $1,200–$3,000.",
@@ -103,8 +95,6 @@ const PET_TYPES: PetType[] = [
     id: "rabbit",
     label: "Rabbits",
     emoji: "🐇",
-    accentColor: "#db2777",
-    bgColor: "#fdf2f8",
     headline: "Quiet, soft, and surprisingly fragile.",
     sub: "Rabbits mask pain instinctively — by the time you notice something's wrong, a vet visit is urgent. GI stasis kills in hours.",
     fact: "GI stasis surgery costs $1,500–$3,000. Dental spurs require regular $200–$400 treatments.",
@@ -125,8 +115,6 @@ const PET_TYPES: PetType[] = [
     id: "reptile",
     label: "Reptiles",
     emoji: "🦎",
-    accentColor: "#65a30d",
-    bgColor: "#f7fee7",
     headline: "Cold-blooded pets, warm-hearted bills.",
     sub: "Reptile vets are rare. When your bearded dragon gets metabolic bone disease or your ball python needs surgery, specialist costs are steep.",
     fact: "MBD treatment in bearded dragons: $500–$2,000. Egg-binding surgery in female reptiles: $1,000–$3,500.",
@@ -147,8 +135,6 @@ const PET_TYPES: PetType[] = [
     id: "exotic",
     label: "Small Mammals",
     emoji: "🐹",
-    accentColor: "#d97706",
-    bgColor: "#fffbeb",
     headline: "Small animals. Big hearts. Unexpected vet bills.",
     sub: "Ferrets, guinea pigs, chinchillas — exotic small mammals need specialized vets. One adrenal disease diagnosis changes everything.",
     fact: "Ferret adrenal surgery: $1,500–$3,000. Guinea pig ovarian cysts: $500–$1,500. Chinchilla malocclusion: $800–$2,000.",
@@ -176,120 +162,104 @@ const LIKED_CAPTIONS = [
 
 function PhotoCard({
   photo,
-  size,
   index,
   liked,
   onLike,
   likeCaption,
-  accentColor,
-  bgColor,
+  featured = false,
 }: {
   photo: PetPhoto;
-  size: "large" | "medium" | "small";
   index: number;
   liked: boolean;
   onLike: () => void;
   likeCaption: boolean;
-  accentColor: string;
-  bgColor: string;
+  featured?: boolean;
 }) {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  // Reset state when URL changes (e.g. HMR, tab switch) and handle pre-cached images
-  useEffect(() => {
-    setImgLoaded(false);
-    setImgError(false);
-    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
-      setImgLoaded(true);
-    }
-  }, [photo.url]);
+  // Parent keys each card by URL, so state starts fresh. A ref callback catches images the browser already cached.
+  const imgRef = useCallback((img: HTMLImageElement | null) => {
+    if (img?.complete && img.naturalWidth > 0) setImgLoaded(true);
+  }, []);
 
   return (
-    <motion.div
-      whileTap={{ scale: 0.97 }}
-      onClick={onLike}
-      className="relative cursor-pointer overflow-hidden group"
+    <figure
+      className="relative overflow-hidden group h-full"
       style={{
-        borderRadius: size === "large" ? 16 : 12,
-        background: bgColor,
-        height: "100%",
+        borderRadius: 12,
+        background: "var(--color-mint-soft)",
+        border: "2px solid var(--color-ink)",
+        gridColumn: featured ? "span 2" : undefined,
+        gridRow: featured ? "span 2" : undefined,
       }}
     >
-      {/* Emoji fallback — shown until image loads or on error */}
       {(!imgLoaded || imgError) && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-          <span style={{ fontSize: size === "large" ? 64 : size === "medium" ? 36 : 24, lineHeight: 1 }}>
-            {photo.fallback}
-          </span>
+        <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
+          <span style={{ fontSize: featured ? 64 : 34, lineHeight: 1 }}>{photo.fallback}</span>
         </div>
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       {!imgError && (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           ref={imgRef}
           src={photo.url}
           alt={photo.caption}
           className="object-cover transition-transform duration-500 group-hover:scale-105"
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", opacity: imgLoaded ? 1 : 0, transition: "opacity 0.4s" }}
-          loading="eager"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            opacity: imgLoaded ? 1 : 0,
+            transition: "opacity 0.4s, transform 0.5s",
+          }}
+          loading="lazy"
           onLoad={() => setImgLoaded(true)}
           onError={() => setImgError(true)}
         />
       )}
-      {/* Bottom gradient + caption */}
-      <div
-        className="absolute bottom-0 left-0 right-0 px-3 py-2.5"
-        style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%)",
-        }}
+
+      <figcaption
+        className="absolute left-2 bottom-2 px-2.5 py-1 rounded-full"
+        style={{ background: "var(--color-paper)", border: "2px solid var(--color-ink)", fontSize: featured ? 14 : 12, fontWeight: 650, lineHeight: 1.2 }}
       >
-        <div className="text-white font-semibold leading-tight" style={{ fontSize: size === "large" ? 13 : 10 }}>
-          {photo.caption}
-        </div>
-        {photo.detail && size !== "small" && (
-          <div className="text-white/70 leading-none mt-0.5" style={{ fontSize: size === "large" ? 11 : 9 }}>
-            {photo.detail}
-          </div>
-        )}
-      </div>
-      {/* Heart button */}
+        {photo.caption}
+        {photo.detail && featured ? <span style={{ fontWeight: 500, color: "var(--color-muted)" }}>, {photo.detail}</span> : null}
+      </figcaption>
+
       <button
-        className="absolute top-2 right-2 flex items-center justify-center transition-transform active:scale-90"
+        onClick={onLike}
+        aria-pressed={liked}
+        aria-label={`${liked ? "Unfavorite" : "Favorite"} ${photo.caption}`}
+        className="absolute top-2 right-2 flex items-center justify-center rounded-full"
         style={{
-          width: size === "large" ? 30 : 22,
-          height: size === "large" ? 30 : 22,
-          background: liked ? "#fee2e2" : "rgba(255,255,255,0.85)",
-          borderRadius: 9999,
-          backdropFilter: "blur(4px)",
+          width: 34,
+          height: 34,
+          background: liked ? "var(--color-tag)" : "var(--color-paper)",
+          border: "2px solid var(--color-ink)",
         }}
-        onClick={(e) => { e.stopPropagation(); onLike(); }}
       >
         <Heart
-          style={{
-            width: size === "large" ? 14 : 10,
-            height: size === "large" ? 14 : 10,
-            color: liked ? "#ef4444" : "#9ca3af",
-            fill: liked ? "#ef4444" : "none",
-          }}
+          className="w-4 h-4"
+          style={{ color: "var(--color-ink)", fill: liked ? "var(--color-stamp)" : "none" }}
         />
       </button>
-      {/* Like toast */}
+
       <AnimatePresence>
         {likeCaption && liked && (
           <motion.div
+            role="status"
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-x-2 bottom-10 text-center px-2 py-1.5 bg-white/90 backdrop-blur"
-            style={{ borderRadius: 8, fontSize: 10, color: "#1d1d1f", fontWeight: 500 }}
+            className="absolute inset-x-2 bottom-12 text-center px-2 py-1.5"
+            style={{ borderRadius: 8, fontSize: 13, fontWeight: 600, background: "var(--color-tag)", border: "2px solid var(--color-ink)" }}
           >
             {LIKED_CAPTIONS[index % LIKED_CAPTIONS.length]}
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </figure>
   );
 }
 
@@ -309,187 +279,129 @@ export default function PetGallery() {
   const toggleLike = (idx: number) => {
     setLiked((prev) => {
       const next = new Set(prev);
-      next.has(idx) ? next.delete(idx) : next.add(idx);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
       return next;
     });
     setLikeCaption(idx);
     setTimeout(() => setLikeCaption(null), 2200);
   };
 
-  const [p0, p1, p2, p3, p4, p5, p6, p7] = activePet.photos;
+  const photos = activePet.photos.slice(0, 6);
 
   return (
-    <section className="bg-white" style={{ padding: "88px 0" }}>
-      <div className="max-w-[980px] mx-auto px-4 sm:px-6">
-
-        {/* Header */}
-        <div className="text-center mb-10">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <span
-              className="inline-block text-white text-[11px] font-semibold mb-4 px-3 py-1"
-              style={{ background: activePet.accentColor, borderRadius: 9999, transition: "background 0.4s" }}
-            >
-              Every pet covered
-            </span>
-            <h2
-              className="font-semibold text-[#1d1d1f] mb-3 leading-tight"
-              style={{ fontSize: "clamp(28px, 4vw, 40px)", letterSpacing: "-0.374px" }}
-            >
+    <section style={{ background: "var(--color-mint)", padding: "clamp(64px, 9vw, 120px) 0" }}>
+      <div className="max-w-[1240px] mx-auto px-5 sm:px-8">
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
+          <div>
+            <h2 className="display" style={{ fontSize: "clamp(40px, 5.5vw, 76px)" }}>
               What type of pet do you have?
             </h2>
-            <p className="text-[#7a7a7a] mx-auto max-w-lg" style={{ fontSize: 17, letterSpacing: "-0.374px" }}>
-              Click your pet to see real coverage options, common health risks, and average costs.
+            <p className="mt-4 prose-measure" style={{ fontSize: 19, color: "var(--color-muted)", maxWidth: "46ch" }}>
+              Choose yours to see common health risks and what a bad week costs.
             </p>
-          </motion.div>
+          </div>
+
+          <div className="flex flex-wrap gap-2" role="tablist" aria-label="Pet type">
+            {PET_TYPES.map((pet) => {
+              const active = activePet.id === pet.id;
+              return (
+                <button
+                  key={pet.id}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => handleTabClick(pet)}
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-full transition-colors"
+                  style={{
+                    fontSize: 16,
+                    fontWeight: active ? 700 : 500,
+                    background: active ? "var(--color-scrub)" : "var(--color-paper)",
+                    color: active ? "#fff" : "var(--color-ink)",
+                    border: "2px solid var(--color-ink)",
+                  }}
+                >
+                  <span aria-hidden style={{ fontSize: 18 }}>
+                    {pet.emoji}
+                  </span>
+                  {pet.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Pet type tabs */}
-        <div className="flex flex-wrap gap-2 justify-center mb-10">
-          {PET_TYPES.map((pet) => (
-            <button
-              key={pet.id}
-              onClick={() => handleTabClick(pet)}
-              className="flex items-center gap-2 px-4 py-2.5 transition-all active:scale-95"
-              style={{
-                borderRadius: 9999,
-                fontSize: 14,
-                fontWeight: activePet.id === pet.id ? 600 : 400,
-                background: activePet.id === pet.id ? pet.accentColor : "#f5f5f7",
-                color: activePet.id === pet.id ? "#fff" : "#3a3a3c",
-                border: activePet.id === pet.id ? "none" : "1px solid #e0e0e0",
-                boxShadow: activePet.id === pet.id ? `0 4px 14px ${pet.accentColor}40` : "none",
-              }}
-            >
-              <span style={{ fontSize: 18 }}>{pet.emoji}</span>
-              {pet.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Content — animated on tab switch */}
         <AnimatePresence mode="wait">
           <motion.div
             key={activePet.id}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.28 }}
+            role="tabpanel"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-8 lg:gap-12 items-start"
           >
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            <div>
+              <div className="grid grid-cols-3 gap-2.5" style={{ gridAutoRows: "clamp(96px, 15vw, 168px)" }}>
+                {photos.map((photo, i) => (
+                  <PhotoCard
+                    key={photo.url}
+                    photo={photo}
+                    index={i}
+                    featured={i === 0}
+                    liked={liked.has(i)}
+                    onLike={() => toggleLike(i)}
+                    likeCaption={likeCaption === i}
+                  />
+                ))}
+              </div>
+              <p className="mt-3" style={{ fontSize: 14, color: "var(--color-muted)" }}>
+                {liked.size > 0
+                  ? `${liked.size} favorite${liked.size === 1 ? "" : "s"}. Now find them a plan.`
+                  : "Tap the heart on any photo to save a favorite."}
+              </p>
+            </div>
 
-              {/* ── Photo mosaic ── */}
-              <div className="lg:col-span-3 flex flex-col gap-2">
-                {/* Row 1: large + 2 medium */}
-                <div className="grid grid-cols-3 gap-2" style={{ height: 220 }}>
-                  <div className="col-span-2 row-span-2" style={{ height: 220 }}>
-                    <PhotoCard photo={p0} size="large" index={0} liked={liked.has(0)} onLike={() => toggleLike(0)} likeCaption={likeCaption === 0} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                  </div>
-                  <div style={{ height: 107 }}>
-                    <PhotoCard photo={p1} size="medium" index={1} liked={liked.has(1)} onLike={() => toggleLike(1)} likeCaption={likeCaption === 1} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                  </div>
-                  <div style={{ height: 107 }}>
-                    <PhotoCard photo={p2} size="medium" index={2} liked={liked.has(2)} onLike={() => toggleLike(2)} likeCaption={likeCaption === 2} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                  </div>
-                </div>
-
-                {/* Row 2: 2 medium + 1 taking right col was already used, show 2 mediums */}
-                <div className="grid grid-cols-2 gap-2" style={{ height: 130 }}>
-                  <PhotoCard photo={p3} size="medium" index={3} liked={liked.has(3)} onLike={() => toggleLike(3)} likeCaption={likeCaption === 3} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                  <PhotoCard photo={p4} size="medium" index={4} liked={liked.has(4)} onLike={() => toggleLike(4)} likeCaption={likeCaption === 4} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                </div>
-
-                {/* Row 3: 3 small */}
-                <div className="grid grid-cols-3 gap-2" style={{ height: 90 }}>
-                  <PhotoCard photo={p5} size="small" index={5} liked={liked.has(5)} onLike={() => toggleLike(5)} likeCaption={likeCaption === 5} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                  <PhotoCard photo={p6} size="small" index={6} liked={liked.has(6)} onLike={() => toggleLike(6)} likeCaption={likeCaption === 6} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                  <PhotoCard photo={p7} size="small" index={7} liked={liked.has(7)} onLike={() => toggleLike(7)} likeCaption={likeCaption === 7} accentColor={activePet.accentColor} bgColor={activePet.bgColor} />
-                </div>
-
-                {/* Like counter */}
-                <div className="flex items-center gap-2" style={{ fontSize: 12, color: "#7a7a7a" }}>
-                  <Heart className="w-3.5 h-3.5 text-red-400 fill-red-400" />
-                  {liked.size > 0 ? (
-                    <span>
-                      <strong className="text-[#1d1d1f]">{liked.size}</strong> of your favorites — now find them a plan
-                    </span>
-                  ) : (
-                    <span>Tap any photo to show some love ❤️</span>
-                  )}
-                </div>
+            <div className="flex flex-col gap-6">
+              <div>
+                <h3 className="heading" style={{ fontSize: "clamp(30px, 3.4vw, 44px)" }}>
+                  {activePet.headline}
+                </h3>
+                <p className="mt-3 prose-measure" style={{ fontSize: 17, lineHeight: 1.6 }}>
+                  {activePet.sub}
+                </p>
               </div>
 
-              {/* ── Info panel ── */}
-              <div className="lg:col-span-2 flex flex-col gap-4">
-                <div
-                  className="p-6 flex flex-col gap-3"
-                  style={{
-                    borderRadius: 18,
-                    background: activePet.bgColor,
-                    border: `1.5px solid ${activePet.accentColor}20`,
-                  }}
-                >
-                  <div className="flex items-center gap-2">
-                    <span style={{ fontSize: 36 }}>{activePet.emoji}</span>
-                    <h3
-                      className="font-semibold text-[#1d1d1f] leading-snug"
-                      style={{ fontSize: 19, letterSpacing: "-0.374px" }}
+              <p
+                className="px-4 py-3"
+                style={{ fontSize: 16, lineHeight: 1.5, background: "var(--color-paper)", borderRadius: 10, borderLeft: "6px solid var(--color-teal)" }}
+              >
+                {activePet.fact}
+              </p>
+
+              <div>
+                <h4 className="heading mb-2" style={{ fontSize: 20 }}>
+                  Common health risks
+                </h4>
+                <ul className="flex flex-wrap gap-2">
+                  {activePet.riskNote.split(" · ").map((risk) => (
+                    <li
+                      key={risk}
+                      className="px-3 py-1 rounded-full"
+                      style={{ fontSize: 14, fontWeight: 550, background: "var(--color-tag-soft)", border: "1.5px solid var(--color-ink)" }}
                     >
-                      {activePet.headline}
-                    </h3>
-                  </div>
-                  <p className="text-[#3a3a3c]" style={{ fontSize: 13, letterSpacing: "-0.12px", lineHeight: 1.5 }}>
-                    {activePet.sub}
-                  </p>
-                </div>
-
-                <div
-                  className="px-4 py-3 flex items-start gap-3"
-                  style={{ borderRadius: 12, background: "rgba(0,0,0,0.03)", border: "1px solid #e0e0e0" }}
-                >
-                  <span style={{ fontSize: 20 }}>💡</span>
-                  <p className="text-[#3a3a3c]" style={{ fontSize: 13, lineHeight: 1.5 }}>
-                    {activePet.fact}
-                  </p>
-                </div>
-
-                <div
-                  className="px-4 py-3"
-                  style={{ borderRadius: 12, background: "#fff8f0", border: "1px solid #fed7aa" }}
-                >
-                  <div className="text-[#92400e] font-semibold mb-1" style={{ fontSize: 11 }}>
-                    ⚠ Common health risks
-                  </div>
-                  <p className="text-[#78350f]" style={{ fontSize: 12 }}>
-                    {activePet.riskNote}
-                  </p>
-                </div>
-
-                <Link
-                  href="/compare"
-                  className="flex items-center justify-center gap-2 text-white transition-colors active:scale-95 mt-auto"
-                  style={{
-                    borderRadius: 9999,
-                    fontSize: 15,
-                    fontWeight: 500,
-                    padding: "13px 24px",
-                    background: activePet.accentColor,
-                    boxShadow: `0 4px 14px ${activePet.accentColor}40`,
-                  }}
-                >
-                  {activePet.ctaLabel}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+                      {risk}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
+              <Link href="/compare" className="btn self-start">
+                {activePet.ctaLabel}
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </motion.div>
         </AnimatePresence>
-
       </div>
     </section>
   );
