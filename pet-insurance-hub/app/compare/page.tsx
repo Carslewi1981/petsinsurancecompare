@@ -10,6 +10,8 @@ import { scoreInsurerForBreed } from "@/lib/healthRisk";
 import { getPriceMultiplier } from "@/lib/priceMultiplier";
 import FilterSidebar from "@/components/FilterSidebar";
 import PlanCard from "@/components/PlanCard";
+import PlanDataNote from "@/components/PlanDataNote";
+import Link from "next/link";
 
 function inBudget(price: number, budget: string) {
   switch (budget) {
@@ -216,6 +218,25 @@ export default function ComparePage() {
               <strong style={{ fontWeight: 800 }}>{filtered.length}</strong> plan{filtered.length !== 1 ? "s" : ""} for{" "}
               {animalLabel}
             </p>
+
+            {selectedAnimal !== "all" && selectedAnimal !== "dog" && selectedAnimal !== "cat" && (
+              <p
+                className="mb-6 px-4 py-3 prose-measure"
+                style={{ fontSize: 16, lineHeight: 1.5, background: "var(--color-tag-soft)", borderRadius: 8 }}
+              >
+                Heads up: very few insurers cover {animalLabel}. Of the {insurers.length} providers we track,{" "}
+                {insurers.filter((i) => i.animals.includes(selectedAnimal)).length === 1
+                  ? "only 1 does"
+                  : `${insurers.filter((i) => i.animals.includes(selectedAnimal)).length} do`}
+                . Our{" "}
+                <Link href="/resources/exotic-pet-coverage-guide" className="link-u">
+                  exotic pet coverage guide
+                </Link>{" "}
+                explains what to look for.
+              </p>
+            )}
+
+            <PlanDataNote className="mb-6" />
 
             {filtered.length === 0 ? (
               <div

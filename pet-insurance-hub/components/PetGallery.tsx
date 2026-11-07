@@ -35,7 +35,7 @@ const PET_TYPES: PetType[] = [
     id: "dog",
     label: "Dogs",
     emoji: "🐕",
-    headline: "Man's best friend deserves the best coverage.",
+    headline: "Every breed has its own weak spot. Know your dog's.",
     sub: "From Golden Retrievers to Dachshunds — every breed faces unique health risks. Find a plan built for your dog.",
     fact: "1 in 3 dogs needs emergency vet care each year. Average bill: $1,500–$5,000.",
     ctaLabel: "Compare dog plans",
