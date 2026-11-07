@@ -6,16 +6,18 @@ import VetBill from "@/components/VetBill";
 import HowItWorks from "@/components/HowItWorks";
 import PetGallery from "@/components/PetGallery";
 import PlanCard from "@/components/PlanCard";
+import PlanDataNote from "@/components/PlanDataNote";
 import { insurers } from "@/lib/insurers";
 import { useStore } from "@/lib/store";
 
 const topPlans = [...insurers].sort((a, b) => b.rating - a.rating).slice(0, 3);
+const dogCatCount = insurers.filter((i) => i.animals.includes("dog") || i.animals.includes("cat")).length;
+const exoticCount = insurers.filter((i) => i.animals.some((a) => !["dog", "cat"].includes(a))).length;
 
 const WE_DO = [
   "Score every provider on the same criteria",
   "Show exclusions and waiting periods next to coverage",
-  "Publish reviews from confirmed pet owners",
-  "Recheck plan terms every month",
+  "Date-stamp every price and rating so you know how fresh it is",
   "Keep the whole comparison free, with no account",
 ];
 
@@ -54,7 +56,9 @@ export default function HomePage() {
               </a>
             </div>
             <p className="mt-8" style={{ fontSize: 15, color: "var(--color-muted)", maxWidth: "46ch", lineHeight: 1.5 }}>
-              {insurers.length} providers for dogs, cats, birds, rabbits, reptiles and exotics. Free, with no account.
+              {`${dogCatCount} providers for dogs and cats. For birds, rabbits, reptiles and exotics the market is much smaller: ${
+                exoticCount === 1 ? "only 1 provider we track covers them" : `${exoticCount} providers we track cover them`
+              }. Free, with no account.`}
             </p>
           </div>
 
@@ -80,6 +84,8 @@ export default function HomePage() {
               {t.feat_seeAll}
             </Link>
           </div>
+
+          <PlanDataNote className="mb-6" />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
             {topPlans.map((insurer, i) => (

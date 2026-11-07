@@ -277,7 +277,7 @@ export default function PlanCard({ insurer, animal }: PlanCardProps) {
           <a
             href={insurer.contact.website}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="sponsored noopener noreferrer"
             className="btn btn-sm flex-1"
           >
             {t.card_getQuote}

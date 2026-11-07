@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { DATA_CHECKED, RATINGS_SOURCE } from "@/lib/siteInfo";
 
 const values = [
   {
@@ -7,16 +8,16 @@ const values = [
     description: "We show costs, exclusions, and fine print for every plan, and we say how we earn money.",
   },
   {
-    title: "Rankings we don't sell",
-    description: "No insurer pays to rank higher. Commissions never change the order of the list.",
+    title: "Unbiased comparisons",
+    description: "Plans are ranked by customer rating, and the same rule applies to every provider. Affiliate commissions never change the order.",
   },
   {
-    title: "Clear to pet owners",
-    description: "Plain language, the same details for every plan, and exotic pets included.",
+    title: "Built for pet owners",
+    description: "Every card shows what a plan covers, what it excludes, and its waiting period, side by side.",
   },
   {
-    title: "Checked, with a date",
-    description: "Plan details were last checked in October 2026. Always confirm terms with the insurer before you buy.",
+    title: "Always up to date",
+    description: "Every price and rating carries the date it was last checked, so you know how fresh it is.",
   },
 ];
 
@@ -55,8 +56,8 @@ export default function AboutPage() {
             We exist so your pet gets the care it deserves.
           </h1>
           <p className="prose-measure mt-8" style={{ fontSize: "clamp(19px, 1.8vw, 24px)", lineHeight: 1.5, color: "var(--color-muted)", maxWidth: "52ch" }}>
-            PetPlan Compare puts pet insurance plans side by side in plain language, including for birds, reptiles,
-            and other exotic pets that most comparison sites skip.
+            PetPlan Compare is an independent comparison site. We are not an insurer, broker, or agent, and no
+            provider pays to be listed or ranked.
           </p>
         </div>
       </section>
@@ -73,8 +74,43 @@ export default function AboutPage() {
             and risk tolerance.
           </p>
           <p>
-            We cover dogs, cats, birds, rabbits, reptiles, and exotic animals. We believe every companion animal
-            deserves access to quality veterinary care, regardless of species.
+            Most pet insurance is written for dogs and cats, and that is where most of the plans on this site are. For
+            birds, rabbits, reptiles, and exotics the choice is much smaller, and we say so plainly rather than pad the
+            list.
+          </p>
+        </div>
+      </Section>
+
+      <Section title="Who runs this">
+        <div className="space-y-5 prose-measure" style={{ fontSize: 19, lineHeight: 1.65 }}>
+          <p>
+            PetPlan Compare is built and run by Carl, an independent business owner. It is not owned by, funded by, or
+            affiliated with any insurance company.
+          </p>
+        </div>
+      </Section>
+
+      <div id="how-we-rate" style={{ scrollMarginTop: 96 }} />
+      <Section title="How we rate" tone="mint">
+        <div className="space-y-5 prose-measure" style={{ fontSize: 19, lineHeight: 1.65 }}>
+          <p>
+            <strong>Ranking.</strong> &ldquo;Top rated&rdquo; and the default order on the compare page are sorted by
+            customer star rating, highest first. Nothing else moves a provider up or down. You can re-sort by price,
+            number of reviews, claims speed, or breed match.
+          </p>
+          <p>
+            <strong>Ratings.</strong> {RATINGS_SOURCE}. They are a snapshot, not a live feed.
+          </p>
+          <p>
+            <strong>Prices.</strong> Monthly prices are estimated starting rates from publicly available information.
+            Your real price depends on your pet&apos;s age, breed, and location, so always get a quote from the provider.
+          </p>
+          <p>
+            <strong>Plan terms.</strong> Reimbursement, deductibles, annual limits, waiting periods, and exclusions come
+            from each provider&apos;s published plan information.
+          </p>
+          <p>
+            <strong>Last checked:</strong> {DATA_CHECKED}.
           </p>
         </div>
       </Section>
@@ -82,18 +118,14 @@ export default function AboutPage() {
       <Section title="How the tool works">
         <div className="space-y-5 prose-measure" style={{ fontSize: 19, lineHeight: 1.65 }}>
           <p>
-            We put plan details for every insurer in one format so they are easy to compare. Prices are estimates,
-            not quotes, and they change, so confirm the terms with the insurer before you buy.
-          </p>
-          <p id="how-we-rate">
-            By default the list is sorted by star rating, highest first. You can sort by price, reviews, claims speed,
-            or breed match instead. No insurer pays to rank higher. Some links are affiliate links, so we may earn a
-            commission if you buy a policy, and that never changes the order.
+            When you filter by animal type, price, or coverage, we apply those filters instantly to the same plan data
+            for every provider. No provider pays to appear higher in results.
           </p>
           <p>
             When you click &ldquo;Get a quote&rdquo; or &ldquo;Contact&rdquo;, you&apos;re directed to the
             provider&apos;s own systems. PetPlan Compare does not process insurance applications or handle premium
-            payments. We are a comparison and education platform only.
+            payments. We are a comparison and education platform only. Some of those links may be affiliate links, which can earn us a
+            commission at no cost to you; that never affects the order plans appear in.
           </p>
         </div>
       </Section>
