@@ -41,16 +41,17 @@ const languages: { code: LangCode; label: string; flag: string }[] = [
   { code: "ms", label: "Bahasa Melayu", flag: "🇲🇾" },
 ];
 
-// The logo artwork has its own dark background, so it always sits on a rounded dark plate.
-export function Logo({ height = 48 }: { height?: number }) {
+// Transparent-background logo. "light" is for light backgrounds (dark wordmark),
+// "dark" is for dark backgrounds (silver wordmark). Both share the gold coin.
+export function Logo({ height = 48, tone = "light" }: { height?: number; tone?: "light" | "dark" }) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/logo.webp"
+      src={`/logo-${tone}.webp`}
       alt="PetPlan Compare"
-      width={Math.round((height * 984) / 212)}
+      width={Math.round((height * 1830) / 328)}
       height={height}
-      style={{ height, width: "auto", borderRadius: 10, display: "block" }}
+      style={{ height, width: "auto", display: "block" }}
     />
   );
 }
@@ -145,16 +146,16 @@ export default function Navbar() {
           background: "rgba(246,248,245,0.94)",
           backdropFilter: "blur(10px)",
           borderColor: "var(--color-line)",
-          height: 68,
+          height: 76,
         }}
       >
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 h-full flex items-center justify-between gap-6">
           <Link href="/" className="flex items-center shrink-0" aria-label="PetPlan Compare, home">
             <span className="sm:hidden">
-              <Logo height={44} />
+              <Logo height={40} />
             </span>
             <span className="hidden sm:block">
-              <Logo height={52} />
+              <Logo height={56} />
             </span>
           </Link>
 
@@ -225,7 +226,7 @@ export default function Navbar() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="fixed top-[68px] left-0 right-0 z-40 md:hidden bg-chart border-b"
+            className="fixed top-[76px] left-0 right-0 z-40 md:hidden bg-chart border-b"
             style={{ borderColor: "var(--color-line)" }}
           >
             <div className="px-5 py-5 flex flex-col">

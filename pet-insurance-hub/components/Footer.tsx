@@ -61,7 +61,7 @@ export default function Footer() {
         >
           <div>
             <Link href="/" className="inline-block mb-5" aria-label="PetPlan Compare, home">
-              <Logo height={60} />
+              <Logo height={64} tone="dark" />
             </Link>
             <p className="prose-measure text-white/80" style={{ fontSize: 16, lineHeight: 1.65, maxWidth: "36ch" }}>
               {t.footer_desc}
