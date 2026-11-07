@@ -26,7 +26,8 @@ export const metadata: Metadata = {
   description:
     "Compare top pet insurance plans for dogs, cats, birds, reptiles, and exotic animals — in seconds.",
   icons: {
-    icon: "/favicon.svg",
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
 };
 

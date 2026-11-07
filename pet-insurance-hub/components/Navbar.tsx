@@ -41,24 +41,17 @@ const languages: { code: LangCode; label: string; flag: string }[] = [
   { code: "ms", label: "Bahasa Melayu", flag: "🇲🇾" },
 ];
 
-export function PawMark({ size = 34 }: { size?: number }) {
-  const paw = (
-    <>
-      <ellipse cx="0" cy="0" rx="8" ry="6.5" />
-      <ellipse cx="-10" cy="-10" rx="3.5" ry="4.5" />
-      <ellipse cx="-3.5" cy="-15" rx="4" ry="5" />
-      <ellipse cx="4" cy="-15" rx="4" ry="5" />
-      <ellipse cx="10.5" cy="-9" rx="3.5" ry="4.5" />
-    </>
-  );
+// The logo artwork has its own dark background, so it always sits on a rounded dark plate.
+export function Logo({ height = 48 }: { height?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <circle cx="32" cy="32" r="31" fill="#0b3b3c" />
-      <g fill="#ffd23f">
-        <g transform="translate(25 41) rotate(-8)">{paw}</g>
-        <g transform="translate(44 22) rotate(15) scale(0.52)">{paw}</g>
-      </g>
-    </svg>
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/logo.webp"
+      alt="PetPlan Compare"
+      width={Math.round((height * 984) / 212)}
+      height={height}
+      style={{ height, width: "auto", borderRadius: 10, display: "block" }}
+    />
   );
 }
 
@@ -156,10 +149,12 @@ export default function Navbar() {
         }}
       >
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 h-full flex items-center justify-between gap-6">
-          <Link href="/" className="flex items-center gap-3" aria-label="PetPlan Compare, home">
-            <PawMark />
-            <span className="heading" style={{ fontSize: 24, lineHeight: 1 }}>
-              PetPlan <span style={{ color: "var(--color-teal)" }}>Compare</span>
+          <Link href="/" className="flex items-center shrink-0" aria-label="PetPlan Compare, home">
+            <span className="sm:hidden">
+              <Logo height={44} />
+            </span>
+            <span className="hidden sm:block">
+              <Logo height={52} />
             </span>
           </Link>
 

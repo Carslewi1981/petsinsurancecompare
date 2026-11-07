@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useStore } from "@/lib/store";
-import { PawMark } from "@/components/Navbar";
+import { Logo } from "@/components/Navbar";
 
 function FooterLinks({ title, items }: { title: string; items: { label: string; href: string }[] }) {
   return (
@@ -60,11 +60,8 @@ export default function Footer() {
           style={{ borderColor: "rgba(255,255,255,0.14)" }}
         >
           <div>
-            <Link href="/" className="inline-flex items-center gap-3 mb-5" aria-label="PetPlan Compare, home">
-              <PawMark size={40} />
-              <span className="heading" style={{ fontSize: 28, lineHeight: 1 }}>
-                PetPlan Compare
-              </span>
+            <Link href="/" className="inline-block mb-5" aria-label="PetPlan Compare, home">
+              <Logo height={60} />
             </Link>
             <p className="prose-measure text-white/80" style={{ fontSize: 16, lineHeight: 1.65, maxWidth: "36ch" }}>
               {t.footer_desc}
