@@ -4,19 +4,19 @@ import { ArrowRight } from "lucide-react";
 const values = [
   {
     title: "Full transparency",
-    description: "We show you all costs, exclusions, and fine print — no hidden fees, no sponsored rankings.",
+    description: "We show costs, exclusions, and fine print for every plan, and we say how we earn money.",
   },
   {
-    title: "Unbiased comparisons",
-    description: "Our ranking algorithm is based purely on coverage quality, pricing, and customer reviews.",
+    title: "Rankings we don't sell",
+    description: "No insurer pays to rank higher. Commissions never change the order of the list.",
   },
   {
-    title: "Built for pet owners",
-    description: "Designed by pet owners who struggled to find clear, honest insurance information.",
+    title: "Clear to pet owners",
+    description: "Plain language, the same details for every plan, and exotic pets included.",
   },
   {
-    title: "Always up to date",
-    description: "We update plan details regularly to ensure the information you see is current and accurate.",
+    title: "Checked, with a date",
+    description: "Plan details were last checked in October 2026. Always confirm terms with the insurer before you buy.",
   },
 ];
 
@@ -55,8 +55,8 @@ export default function AboutPage() {
             We exist so your pet gets the care it deserves.
           </h1>
           <p className="prose-measure mt-8" style={{ fontSize: "clamp(19px, 1.8vw, 24px)", lineHeight: 1.5, color: "var(--color-muted)", maxWidth: "52ch" }}>
-            PetPlan Compare was founded by pet owners frustrated by opaque insurance comparisons, confusing policies,
-            and providers who didn&apos;t cover exotic animals.
+            PetPlan Compare puts pet insurance plans side by side in plain language, including for birds, reptiles,
+            and other exotic pets that most comparison sites skip.
           </p>
         </div>
       </section>
@@ -82,13 +82,13 @@ export default function AboutPage() {
       <Section title="How the tool works">
         <div className="space-y-5 prose-measure" style={{ fontSize: 19, lineHeight: 1.65 }}>
           <p>
-            Our comparison database is maintained by a dedicated research team that reviews insurance policy documents,
-            monitors pricing changes, and verifies coverage details directly with providers on a rolling basis.
+            We put plan details for every insurer in one format so they are easy to compare. Prices are estimates,
+            not quotes, and they change, so confirm the terms with the insurer before you buy.
           </p>
-          <p>
-            When you filter by animal type, price, or coverage parameters, we apply those filters in real-time against
-            our normalized dataset. No provider pays to appear higher in results — rankings are determined entirely by
-            rating, pricing, and relevant coverage for your selected criteria.
+          <p id="how-we-rate">
+            By default the list is sorted by star rating, highest first. You can sort by price, reviews, claims speed,
+            or breed match instead. No insurer pays to rank higher. Some links are affiliate links, so we may earn a
+            commission if you buy a policy, and that never changes the order.
           </p>
           <p>
             When you click &ldquo;Get a quote&rdquo; or &ldquo;Contact&rdquo;, you&apos;re directed to the

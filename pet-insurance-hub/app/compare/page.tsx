@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { Suspense, useState, useMemo, useEffect } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useStore } from "@/lib/store";
@@ -107,6 +109,22 @@ function filterAndSort(
   return result;
 }
 
+/** Reads ?animal=dog (or "dogs") from the URL once and selects that animal. Renders nothing. */
+function AnimalFromUrl() {
+  const params = useSearchParams();
+  const { setSelectedAnimal } = useStore();
+  const raw = params.get("animal");
+
+  useEffect(() => {
+    if (!raw) return;
+    const key = raw.toLowerCase();
+    const match = ANIMAL_TYPES.find((a) => a.id === key || `${a.id}s` === key);
+    if (match) setSelectedAnimal(match.id);
+  }, [raw, setSelectedAnimal]);
+
+  return null;
+}
+
 export default function ComparePage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { selectedAnimal, filters, petProfile, resetFilters } = useStore();
@@ -137,6 +155,9 @@ export default function ComparePage() {
 
   return (
     <div>
+      <Suspense fallback={null}>
+        <AnimalFromUrl />
+      </Suspense>
       <header style={{ background: "var(--color-mint)", borderBottom: "2px solid var(--color-ink)" }}>
         <div className="max-w-[1240px] mx-auto px-5 sm:px-8 py-10 sm:py-14">
           <h1 className="display" style={{ fontSize: "clamp(44px, 6.5vw, 92px)" }}>
@@ -212,9 +233,16 @@ export default function ComparePage() {
           </AnimatePresence>
 
           <div className="flex-1 min-w-0">
-            <p className="mb-6" style={{ fontSize: 20 }} aria-live="polite">
+            <p className="mb-2" style={{ fontSize: 20 }} aria-live="polite">
               <strong style={{ fontWeight: 800 }}>{filtered.length}</strong> plan{filtered.length !== 1 ? "s" : ""} for{" "}
               {animalLabel}
+            </p>
+            <p className="mb-6" style={{ fontSize: 14, color: "var(--color-muted)" }}>
+              Sorted by star rating unless you change it. We may earn a commission if you buy through a link; it
+              doesn&apos;t change the order. Plan details checked October 2026.{" "}
+              <Link href="/about#how-we-rate" className="link-u">
+                How we rate
+              </Link>
             </p>
 
             {filtered.length === 0 ? (

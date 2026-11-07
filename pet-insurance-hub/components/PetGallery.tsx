@@ -37,7 +37,7 @@ const PET_TYPES: PetType[] = [
     emoji: "🐕",
     headline: "Man's best friend deserves the best coverage.",
     sub: "From Golden Retrievers to Dachshunds — every breed faces unique health risks. Find a plan built for your dog.",
-    fact: "1 in 3 dogs needs emergency vet care each year. Average bill: $1,500–$5,000.",
+    fact: "An emergency vet visit for a dog can run $1,500–$5,000, depending on the problem and the clinic.",
     ctaLabel: "Compare dog plans",
     riskNote: "ACL tears · Cancer · Hip dysplasia · Bloat",
     photos: [
@@ -57,7 +57,7 @@ const PET_TYPES: PetType[] = [
     emoji: "🐈",
     headline: "Independent souls. Surprisingly expensive vet bills.",
     sub: "Cats hide illness well — until a $3,000 emergency reveals what you couldn't see. Be ready before it happens.",
-    fact: "HCM affects 1 in 7 cats. Kidney disease costs $2,000–$8,000/year to manage.",
+    fact: "About 1 in 7 apparently healthy cats had signs of heart muscle disease in one study (Payne et al., 2015). Managing kidney disease can cost $2,000–$8,000 a year.",
     ctaLabel: "Compare cat plans",
     riskNote: "HCM · Kidney disease · Urinary blockages · Cancer",
     photos: [
@@ -77,7 +77,7 @@ const PET_TYPES: PetType[] = [
     emoji: "🦜",
     headline: "Birds live 20–80 years. So do their vet bills.",
     sub: "Avian vets are specialists — and they charge like it. A single respiratory infection can cost $800–$2,500.",
-    fact: "Parrots can live 60+ years. One crop obstruction surgery averages $1,200–$3,000.",
+    fact: "Large parrots can live 60+ years. A crop obstruction surgery can cost $1,200–$3,000.",
     ctaLabel: "Compare bird plans",
     riskNote: "Psittacosis · Proventricular disease · Crop issues · Feather destructive behavior",
     photos: [

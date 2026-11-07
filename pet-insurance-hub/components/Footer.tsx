@@ -31,11 +31,11 @@ export default function Footer() {
   const { t } = useStore();
 
   const compareLinks = [
-    { label: t.footer_dogs, href: "/compare?animal=dogs" },
-    { label: t.footer_cats, href: "/compare?animal=cats" },
-    { label: t.footer_birds, href: "/compare?animal=birds" },
-    { label: t.footer_rabbits, href: "/compare?animal=rabbits" },
-    { label: t.footer_reptiles, href: "/compare?animal=reptiles" },
+    { label: t.footer_dogs, href: "/compare?animal=dog" },
+    { label: t.footer_cats, href: "/compare?animal=cat" },
+    { label: t.footer_birds, href: "/compare?animal=bird" },
+    { label: t.footer_rabbits, href: "/compare?animal=rabbit" },
+    { label: t.footer_reptiles, href: "/compare?animal=reptile" },
     { label: t.footer_exotic, href: "/compare?animal=exotic" },
   ];
 
