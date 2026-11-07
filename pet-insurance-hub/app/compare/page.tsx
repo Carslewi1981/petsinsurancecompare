@@ -111,7 +111,15 @@ function filterAndSort(
 
 export default function ComparePage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { selectedAnimal, filters, petProfile, resetFilters } = useStore();
+  const { selectedAnimal, setSelectedAnimal, filters, petProfile, resetFilters } = useStore();
+
+  // Footer links open /compare?animal=birds etc. Read the setting once on load.
+  useEffect(() => {
+    const raw = new URLSearchParams(window.location.search).get("animal")?.toLowerCase();
+    if (!raw) return;
+    const id = raw.endsWith("s") ? raw.slice(0, -1) : raw;
+    if (ANIMAL_TYPES.some((a) => a.id === id)) setSelectedAnimal(id);
+  }, [setSelectedAnimal]);
 
   useEffect(() => {
     if (!sidebarOpen) return;
