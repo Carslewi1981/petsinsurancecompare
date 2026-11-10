@@ -169,9 +169,9 @@ export default function VetBill() {
             <div className="flex items-start justify-between gap-4 mb-5">
               <div>
                 <p className="font-sans" style={{ fontFamily: "var(--font-sans)", fontWeight: 700, fontSize: 18, lineHeight: 1.2 }}>
-                  Maple Street Animal Hospital
+                  Example invoice
                 </p>
-                <p style={{ fontSize: 13, color: "var(--color-muted)" }}>Example invoice, {species}</p>
+                <p style={{ fontSize: 13, color: "var(--color-muted)" }}>For a {species}</p>
               </div>
               <span className="stamp stamp-down" style={{ fontFamily: "var(--font-sans)", fontSize: 14, whiteSpace: "nowrap" }}>
                 {usd(planPays)} covered
